@@ -187,11 +187,16 @@ const Crypto03 = React.memo(() => {
         </Text>
         <Content contentContainerStyle={styles.contentWallet}>
           {dataWallet.map((wallet, i) => {
-            return <ListItem type={wallet.type} status={wallet.status} />;
+            return (
+              <ListItem
+                type={wallet.type}
+                status={wallet.status}
+                id={wallet.id}
+              />
+            );
           })}
         </Content>
       </Content>
-      <BottomTab />
     </Container>
   );
 });

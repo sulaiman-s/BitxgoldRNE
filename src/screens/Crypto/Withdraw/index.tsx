@@ -29,6 +29,7 @@ import TabBar from "./TabBar";
 import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
 import { Picker } from "@react-native-picker/picker";
+import TabBarProfile from "../../../components/TabBarProfile";
 
 interface CoinFromProps {
   id: string;
@@ -73,13 +74,11 @@ const ExchangeBxgWithUsdt = React.memo(() => {
         accessoryLeft={() => <NavigationAction status="primary" />}
       />
       <Content>
-        <TabBar
-          style={styles.tabBar}
-          tabActive={activeIndex}
-          onChangeTab={setActiveIndex}
+        <TabBarProfile
           tabs={["Sell BXG", "Transfer BXG"]}
-          backgroundTabActive={theme["background-basic-color-5"]}
-          backgroundTab={theme["background-basic-color-3"]}
+          activeIndex={activeIndex}
+          onChange={setActiveIndex}
+          style={styles.tabBar}
         />
         <Content contentContainerStyle={styles.content}>
           <ViewPager selectedIndex={activeIndex} onSelect={setActiveIndex}>
@@ -150,47 +149,50 @@ const ExchangeBxgWithUsdt = React.memo(() => {
                 </HStack>
                 <Input style={styles.input} placeholder="0x00000000000000" />
               </VStack>
-              <VStack mh={24} mt={16}>
-                <HStack mb={8}>
-                  <Text category="callout">Token</Text>
+              <VStack mh={24} mt={16} mv={10}>
+                <HStack mb={-8}>
+                  <Text category="callout">Amount</Text>
                 </HStack>
-                <Select
-                  value={displayValue}
-                  selectedIndex={selectedIndex}
-                  onSelect={(index) => setSelectedIndex(index)}
+                <HStack
+                  mt={16}
+                  mb={5}
+                  itemsCenter
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#E8E8E8",
+                    borderRadius: 16,
+                    width: "100%",
+                    height: 60,
+                  }}
                 >
-                  <SelectItem title="BXG" />
-                  <SelectItem title="USDT" />
-                  <SelectItem title="BNB" />
-                </Select>
-              </VStack>
-              <VStack mh={24} mv={10}>
-                <HStack mb={8}>
-                  <Text category="callout">Value</Text>
+                  <Input placeholder="100" style={styles.search} size="giant" />
+                  <Select
+                    selectedIndex={selectedIndex}
+                    value={
+                      //@ts-ignore
+                      selectedIndex.row == 0
+                        ? "USDT"
+                        : //@ts-ignore
+                        selectedIndex.row == 1
+                        ? "BXG"
+                        : //@ts-ignore
+                        selectedIndex.row == 2
+                        ? "BNB"
+                        : "USDT"
+                    }
+                    size="large"
+                    status="control"
+                    style={styles.select}
+                    //@ts-ignore
+                    onSelect={(index) => setSelectedIndex(index)}
+                  >
+                    <SelectItem title="USDT" />
+                    <SelectItem title="BXG" />
+                    <SelectItem title="BNB" />
+                  </Select>
                 </HStack>
-                <Input
-                  style={styles.input}
-                  accessoryRight={() => (
-                    <HStack onPress={showFrom} itemsCenter>
-                      <Image
-                        source={Images.crypto.usdt}
-                        //@ts-ignore
-                        style={styles.logo}
-                      />
-                      <Text marginHorizontal={8} category="s2">
-                        {"USDT"}
-                      </Text>
-                      {/* <Icon pack="assets" name="caret_down" style={styles.caret} /> */}
-                    </HStack>
-                  )}
-                />
-                <Text
-                  category="c1"
-                  status="platinum"
-                  marginTop={8}
-                  marginBottom={20}
-                >
-                  Balance: 2,356.00 usdt
+                <Text category="c1" status="platinum" marginBottom={20}>
+                  Balance: 2,356.89 BXG
                 </Text>
               </VStack>
             </VStack>
@@ -254,12 +256,30 @@ const themedStyles = StyleService.create({
     marginBottom: 18,
   },
   tabBar: {
-    marginHorizontal: 24,
-    marginTop: 16,
-    marginBottom: 8,
+    borderRadius: 12,
+    // borderTopLeftRadius: 24,
+    // borderTopRightRadius: 24,
   },
   content: {
     paddingBottom: 40,
+  },
+  select: {
+    flex: 0.6,
+    borderLeftWidth: 1,
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
+    borderLeftColor: "#E8E8E8",
+    backgroundColor: "background-basic-color-1",
+    height: "100%",
+    justifyContent: "center",
+  },
+  search: {
+    flex: 1,
+    backgroundColor: "background-basic-color-1",
+    borderColor: "transparent",
+    justifyContent: "center",
+    borderRadius: 12,
+    height: "100%",
   },
 });
 

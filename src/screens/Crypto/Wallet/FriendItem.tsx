@@ -18,9 +18,9 @@ interface IFriendProps {
 export interface FriendProps {
   level?: "1" | "2" | "3" | "4";
   name: string;
-  amount: string | number;
+  amount: string;
 }
-const FriendItem = ({ level = "2", name, amount }: FriendProps) => {
+const FriendItem = ({ level = "1", name, amount }: FriendProps) => {
   const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
 
@@ -29,14 +29,12 @@ const FriendItem = ({ level = "2", name, amount }: FriendProps) => {
       style={[styles.container, { width: (width - 64) / 2 }]}
       level={level}
     >
-      <Text children={name} category="callout" marginBottom={8} center />
-      <Text
-        children={`${amount} quotes`}
-        status="snow"
-        category="subhead"
-        marginBottom={16}
-        center
-      />
+      <Text category="callout" marginBottom={8} center>
+        {name}
+      </Text>
+      <Text status="snow" category="subhead" marginBottom={16} center>
+        {amount}
+      </Text>
     </VStack>
   );
 };
@@ -51,6 +49,7 @@ const themedStyles = StyleService.create({
     borderRadius: 8,
     marginRight: 16,
     marginBottom: 16,
+    height: 150,
   },
   avatar: {
     marginTop: 24,

@@ -4,6 +4,7 @@ import {
   Image,
   ImageRequireSource,
   ToastAndroid,
+  View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useLayout, useModal } from "hooks";
@@ -63,7 +64,7 @@ const Wallet = React.memo(() => {
 
   const renderFriendItem = React.useCallback(
     ({ name, amount, level }: FriendProps) => {
-      return <FriendItem name={name} level={level} amount={amount} />;
+      return <FriendItem level={level} name={name} amount={amount} />;
     },
     []
   );
@@ -75,9 +76,17 @@ const Wallet = React.memo(() => {
         title={() => <Text category="callout">Wallet</Text>}
         accessoryLeft={() => <NavigationAction status="primary" />}
       />
-      <Content>
-        <FlatList
-          ListHeaderComponent={() => (
+      {/* <Content> */}
+      <FlatList
+        ListHeaderComponent={() => (
+          <View
+            style={{
+              width: "100%",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              paddingRight: 18,
+            }}
+          >
             <Input
               accessoryLeft={(props) => (
                 <Icon
@@ -91,19 +100,22 @@ const Wallet = React.memo(() => {
               style={styles.input}
               size="small"
             />
-          )}
-          contentContainerStyle={[
-            styles.flatListFriend,
-            { paddingBottom: bottom + 60 },
-          ]}
-          scrollEventThrottle={16}
-          data={dataWallet}
-          keyExtractor={keyExtractor}
-          //@ts-ignore
-          renderItem={renderFriendItem}
-          numColumns={2}
-        />
-      </Content>
+          </View>
+        )}
+        contentContainerStyle={[
+          styles.flatListFriend,
+          { paddingBottom: bottom + 60 },
+        ]}
+        scrollEventThrottle={16}
+        data={dataWallet}
+        keyExtractor={keyExtractor}
+        //@ts-ignore
+        renderItem={({ item }) => (
+          <FriendItem level={"1"} name={item.name} amount={item.amount} />
+        )}
+        numColumns={2}
+      />
+      {/* </Content> */}
     </Container>
   );
 });
@@ -125,6 +137,10 @@ const themedStyles = StyleService.create({
   },
   input: {
     backgroundColor: "background-basic-color-1",
+    marginBottom: 16,
+    alignSelf: "center",
+    borderRadius: 15,
+    marginHorizontal: 15,
   },
   buttonSwap: {
     width: 48,
@@ -176,34 +192,37 @@ const dataWallet = [
   {
     id: "0",
     name: "Available Bxg",
-    icon: "life",
-    color: "#215191",
-    // total_transactions: 795.2,
     amount: "56.23 BXG",
   },
   {
     id: "1",
     name: "Staked Bxg",
-    icon: "entertainment",
-    color: "#4B9BAE",
-    // total_transactions: 177.6,
     amount: "32 BXG",
   },
   {
     id: "2",
     name: "Referral Bonus",
-    icon: "shopping",
-    color: "#949398",
-    // total_transactions: 511.2,
     amount: "11 USDT",
   },
   {
-    id: "6",
+    id: "3",
     name: "Available Bnb",
-    icon: "education",
-    color: "#FE9870",
-    // total_transactions: 170.4,
     amount: "0.4367 BNB",
+  },
+  {
+    id: "4",
+    name: "Available Usdt",
+    amount: "12 USDT",
+  },
+  {
+    id: "5",
+    name: "Total Earnings",
+    amount: "0.24 BXG",
+  },
+  {
+    id: "6",
+    name: "Staking Referral Bonus",
+    amount: "0.1 BXG",
   },
 ];
 

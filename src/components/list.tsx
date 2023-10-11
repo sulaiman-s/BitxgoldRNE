@@ -8,11 +8,13 @@ const ListItem = ({
   type,
   //@ts-ignore
   status,
+  //@ts-ignore
+  id,
 }) => {
   const [showAll, setShowAll] = React.useState(false);
 
   return (
-    <VStack border={12} level="2" margin={0} padding={16} mb={12}>
+    <VStack border={12} level="2" margin={0} padding={16} mb={12} key={id}>
       <HStack itemsCenter>
         <HStack itemsCenter>
           <Image

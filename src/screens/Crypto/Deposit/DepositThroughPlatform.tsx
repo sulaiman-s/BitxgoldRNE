@@ -22,9 +22,9 @@ import {
   VStack,
 } from "components";
 import Images from "assets/images";
-import TabBar from "./TabBar";
 import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
+import TabBarProfile from "../../../components/TabBarProfile";
 
 interface CoinFromProps {
   id: string;
@@ -62,13 +62,11 @@ const DepositTrhoughPlatform = React.memo(() => {
         accessoryLeft={() => <NavigationAction status="primary" />}
       />
       <Content>
-        <TabBar
+        <TabBarProfile
+          tabs={["By Platform", "Qr-Code"]}
+          activeIndex={activeIndex}
+          onChange={setActiveIndex}
           style={styles.tabBar}
-          tabActive={activeIndex}
-          onChangeTab={setActiveIndex}
-          tabs={["By Platform", "QR-Code"]}
-          backgroundTabActive={theme["background-basic-color-5"]}
-          backgroundTab={theme["background-basic-color-3"]}
         />
         <Content contentContainerStyle={styles.content}>
           <ViewPager selectedIndex={activeIndex} onSelect={setActiveIndex}>
@@ -212,13 +210,18 @@ const themedStyles = StyleService.create({
     marginTop: 18,
     marginBottom: 18,
   },
-  tabBar: {
-    marginHorizontal: 24,
-    marginTop: 16,
-    marginBottom: 8,
-  },
+  // tabBar: {
+  //   marginHorizontal: 24,
+  //   marginTop: 16,
+  //   marginBottom: 8,
+  // },
   content: {
     paddingBottom: 40,
+  },
+  tabBar: {
+    borderRadius: 12,
+    // borderTopLeftRadius: 24,
+    // borderTopRightRadius: 24,
   },
 });
 
