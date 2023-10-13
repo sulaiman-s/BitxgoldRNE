@@ -22,8 +22,7 @@ import {
   VStack,
 } from "components";
 import Images from "assets/images";
-import QRCode from "react-native-qrcode-svg";
-import * as Clipboard from "expo-clipboard";
+
 import TabBarProfile from "../../../components/TabBarProfile";
 
 interface CoinFromProps {
@@ -38,15 +37,6 @@ const DepositTrhoughPlatform = React.memo(() => {
   const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
   const [activeIndex, setActiveIndex] = React.useState(0);
-
-  const showToast = (message: any) => {
-    ToastAndroid.show(message, ToastAndroid.SHORT);
-  };
-  const qrValue = "0x0000000000000000000000";
-  const handleCopy = () => {
-    Clipboard.setStringAsync(qrValue);
-    showToast("Text copied!");
-  };
 
   const { show: showTo, hide: hideTo, modalRef: modalTo } = useModal();
   const { show: showFrom, hide: hideFrom, modalRef: modalFrom } = useModal();
@@ -63,7 +53,7 @@ const DepositTrhoughPlatform = React.memo(() => {
       />
       <Content>
         <TabBarProfile
-          tabs={["By Platform", "Qr-Code"]}
+          tabs={["Buy", "Sell"]}
           activeIndex={activeIndex}
           onChange={setActiveIndex}
           style={styles.tabBar}
@@ -127,36 +117,71 @@ const DepositTrhoughPlatform = React.memo(() => {
               </VStack>
             </VStack>
 
-            <VStack
-              border={12}
-              level="1"
-              margin={12}
-              mt={50}
-              justify="center"
-              itemsCenter
-            >
-              <VStack mh={24} mt={16} itemsCenter>
-                <QRCode value={qrValue} size={200} />
-                <Text style={{ marginTop: 4 }} category="callout">
-                  Wallet Address:
+            <VStack border={12} level="1" margin={12} mt={50}>
+              <VStack mh={24} mt={16}>
+                <HStack mb={8}>
+                  <Text category="callout">Sell</Text>
+                </HStack>
+                <Input
+                  style={styles.input}
+                  accessoryRight={() => (
+                    <HStack onPress={showFrom} itemsCenter>
+                      <Image
+                        source={Images.crypto.bxg}
+                        //@ts-ignore
+                        style={styles.logo}
+                      />
+                      <Text
+                        // style={{ fontFamily: "AlbertSans-Regular" }}
+                        marginHorizontal={8}
+                        category="s2"
+                      >
+                        {"BXG"}
+                      </Text>
+                      {/* <Icon pack="assets" name="caret_down" style={styles.caret} /> */}
+                    </HStack>
+                  )}
+                />
+                <Text category="c1" status="platinum" marginTop={8}>
+                  Balance: 2,356.89 BXG
                 </Text>
-                <Text category="footnote" style={{ marginBottom: 20 }}>
-                  0x0000000000000000000000000
+              </VStack>
+              <VStack mh={24} mv={10}>
+                <HStack mb={8}>
+                  <Text category="callout">Recieve</Text>
+                </HStack>
+                <Input
+                  style={styles.input}
+                  accessoryRight={() => (
+                    <HStack onPress={showFrom} itemsCenter>
+                      <Image
+                        source={Images.crypto.usdt}
+                        //@ts-ignore
+                        style={styles.logo}
+                      />
+                      <Text marginHorizontal={8} category="s2">
+                        {"USDT"}
+                      </Text>
+                      {/* <Icon pack="assets" name="caret_down" style={styles.caret} /> */}
+                    </HStack>
+                  )}
+                />
+                <Text
+                  category="c1"
+                  status="platinum"
+                  marginTop={8}
+                  marginBottom={20}
+                >
+                  Balance: 2,356.00 usdt
                 </Text>
-                <VStack style={{ width: "100%" }}></VStack>
               </VStack>
             </VStack>
           </ViewPager>
         </Content>
       </Content>
       <Button
-        children={activeIndex === 0 ? "Buy Now" : "Copy"}
+        children={activeIndex === 0 ? "Buy Now" : "Sell Now"}
         style={styles.button}
-        onPress={() => {
-          if (activeIndex === 1) {
-            handleCopy();
-          }
-        }}
       />
     </Container>
   );

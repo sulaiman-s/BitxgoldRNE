@@ -166,4 +166,7 @@ export const Icons = {
   umbrella: require("./ic_umbrella.png"),
   textT: require("./ic_TextT.png"),
   checkw: require("./ic_checkw.png"),
+  bxg:require('./bxg.png'),
+  bnb:require('./img_bnb.png'),
+  usdt:require('./usdt.png')
 };

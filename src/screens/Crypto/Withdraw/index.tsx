@@ -45,6 +45,13 @@ const ExchangeBxgWithUsdt = React.memo(() => {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [selectedLanguage, setSelectedLanguage] = React.useState();
 
+  const { show: showTo, hide: hideTo, modalRef: modalTo } = useModal();
+  const { show: showFrom, hide: hideFrom, modalRef: modalFrom } = useModal();
+
+  const [selectedIndex, setSelectedIndex] = React.useState<
+    IndexPath | IndexPath[]
+  >(new IndexPath(0));
+
   const showToast = (message: any) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
@@ -53,15 +60,6 @@ const ExchangeBxgWithUsdt = React.memo(() => {
     Clipboard.setStringAsync(qrValue);
     showToast("Text copied!");
   };
-
-  const { show: showTo, hide: hideTo, modalRef: modalTo } = useModal();
-  const { show: showFrom, hide: hideFrom, modalRef: modalFrom } = useModal();
-
-  const [selectedIndex, setSelectedIndex] = React.useState<
-    IndexPath | IndexPath[]
-  >(new IndexPath(0));
-  //@ts-ignore
-  const displayValue = dropdown[selectedIndex.row];
 
   const [coinFrom, setCoinFrom] = React.useState(DATA[0]);
   const [showAll, setShowAll] = React.useState(true);
@@ -75,73 +73,32 @@ const ExchangeBxgWithUsdt = React.memo(() => {
       />
       <Content>
         <TabBarProfile
-          tabs={["Sell BXG", "Transfer BXG"]}
+          tabs={["Deposit", "Withdraw"]}
           activeIndex={activeIndex}
           onChange={setActiveIndex}
           style={styles.tabBar}
         />
         <Content contentContainerStyle={styles.content}>
           <ViewPager selectedIndex={activeIndex} onSelect={setActiveIndex}>
-            <VStack border={12} level="1" margin={12} mt={50}>
-              <VStack mh={24} mt={16}>
-                <HStack mb={8}>
-                  <Text category="callout">Sell</Text>
-                </HStack>
-                <Input
-                  style={styles.input}
-                  accessoryRight={() => (
-                    <HStack onPress={showFrom} itemsCenter>
-                      <Image
-                        source={Images.crypto.bxg}
-                        //@ts-ignore
-                        style={styles.logo}
-                      />
-                      <Text
-                        // style={{ fontFamily: "AlbertSans-Regular" }}
-                        marginHorizontal={8}
-                        category="s2"
-                      >
-                        {"BXG"}
-                      </Text>
-                      {/* <Icon pack="assets" name="caret_down" style={styles.caret} /> */}
-                    </HStack>
-                  )}
-                />
-                <Text category="c1" status="platinum" marginTop={8}>
-                  Balance: 2,356.89 BXG
+            <VStack
+              border={12}
+              level="1"
+              margin={12}
+              mt={50}
+              justify="center"
+              itemsCenter
+            >
+              <VStack mh={24} mt={16} itemsCenter>
+                <QRCode value={qrValue} size={200} />
+                <Text style={{ marginTop: 4 }} category="callout">
+                  Wallet Address:
                 </Text>
-              </VStack>
-              <VStack mh={24} mv={10}>
-                <HStack mb={8}>
-                  <Text category="callout">Recieve</Text>
-                </HStack>
-                <Input
-                  style={styles.input}
-                  accessoryRight={() => (
-                    <HStack onPress={showFrom} itemsCenter>
-                      <Image
-                        source={Images.crypto.usdt}
-                        //@ts-ignore
-                        style={styles.logo}
-                      />
-                      <Text marginHorizontal={8} category="s2">
-                        {"USDT"}
-                      </Text>
-                      {/* <Icon pack="assets" name="caret_down" style={styles.caret} /> */}
-                    </HStack>
-                  )}
-                />
-                <Text
-                  category="c1"
-                  status="platinum"
-                  marginTop={8}
-                  marginBottom={20}
-                >
-                  Balance: 2,356.00 usdt
+                <Text category="footnote" style={{ marginBottom: 20 }}>
+                  0x0000000000000000000000000
                 </Text>
+                <VStack style={{ width: "100%" }}></VStack>
               </VStack>
             </VStack>
-
             <VStack border={12} level="1" margin={12} mt={50}>
               <VStack mh={24} mt={16}>
                 <HStack mb={8}>
@@ -200,8 +157,13 @@ const ExchangeBxgWithUsdt = React.memo(() => {
         </Content>
       </Content>
       <Button
-        children={activeIndex === 0 ? "Sell Now" : "Transfer Now"}
+        children={activeIndex === 0 ? "Copy" : "Withdraw"}
         style={styles.button}
+        onPress={() => {
+          if (activeIndex === 1) {
+            handleCopy();
+          }
+        }}
       />
     </Container>
   );

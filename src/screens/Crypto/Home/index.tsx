@@ -20,11 +20,12 @@ import {
   IDivider,
 } from "components";
 import Images from "assets/images";
-import Tab from "../Crypto01/Tab";
 import { navigate } from "navigation/RootNavigation";
 import Wallet from "./Wallet";
 import ListItem from "components/list";
 import BottomTab from "components/BottomTab";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBalance, fetchUserData } from "reduxKit/reducers/slices";
 
 interface IButtonProps {
   onPress?(): void;
@@ -38,9 +39,16 @@ const Crypto03 = React.memo(() => {
   const { goBack } = useNavigation();
   const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
-
+  const dispatch = useDispatch();
   const [showAll, setShowAll] = React.useState(true);
-
+  //@ts-ignore
+  const { bxg, bnb, usdt } = useSelector((state) => state.wallet);
+  //@ts-ignore
+  const { id } = useSelector((state) => state.user);
+  //@ts-ignore
+  console.log(useSelector((state) => state.user));
+  //@ts-ignore
+  console.log(useSelector((state) => state.wallet));
   const dataWallet = [
     {
       id: "0",
@@ -83,6 +91,11 @@ const Crypto03 = React.memo(() => {
       status: "declined",
     },
   ];
+  const DATA = [
+    { icon: "bxg", name: "BXG", balance: bxg, color: "#0084F4" },
+    { icon: "usdt", name: "USDT", balance: usdt, color: "#00C48C" },
+    { icon: "bnb", name: "BNB", balance: bnb, color: "#FFA26B" },
+  ];
 
   const IButton = ({ onPress, title, icon, level }: IButtonProps) => {
     return (
@@ -97,10 +110,15 @@ const Crypto03 = React.memo(() => {
             }}
           />
         </VStack>
-        <Text>{title}</Text>
+        <Text category="s2">{title}</Text>
       </VStack>
     );
   };
+
+  React.useEffect(() => {
+    //@ts-ignore
+    dispatch(fetchBalance(id));
+  }, []);
 
   return (
     <Container style={styles.container}>
@@ -123,7 +141,7 @@ const Crypto03 = React.memo(() => {
         Home
       </Text>
       <Content>
-        <VStack level="6" padding={16} mh={20} border={12} mt={16}>
+        {/* <VStack level="6" padding={16} mh={20} border={12} mt={16}>
           <HStack itemsCenter mb={12}>
             <Text status="white">Your total value:</Text>
             <HStack itemsCenter>
@@ -156,16 +174,52 @@ const Crypto03 = React.memo(() => {
               );
             })}
           </HStack>
-        </VStack>
+        </VStack> */}
+        <Content style={styles.contentCategories} horizontal>
+          {DATA.map(({ color, icon, name, balance }, i) => {
+            return (
+              <VStack
+                padding={20}
+                border={8}
+                style={{
+                  backgroundColor: color,
+                  width: 138 * (width / 375),
+                  height: 152 * (height / 812),
+                }}
+                key={i}
+                mr={4}
+                justify="flex-start"
+              >
+                <Image
+                  //@ts-ignore
+                  source={Images.crypto[icon]}
+                  //@ts-ignore
+                  style={styles.icon}
+                />
+                <Text
+                  category="callout"
+                  status="white"
+                  numberOfLines={1}
+                  marginTop={16}
+                >
+                  {name}
+                </Text>
+                <Text category="callout" status="white" numberOfLines={1}>
+                  {balance}
+                </Text>
+              </VStack>
+            );
+          })}
+        </Content>
         <HStack mh={16} mt={24}>
           <IButton
-            title={"Desposit"}
+            title={"Buy/Sell"}
             icon={"plus"}
             level="7"
             onPress={() => navigate("DepositTrhoughPlatform")}
           />
           <IButton
-            title={"Withdraw"}
+            title={"Deposit/Withdraw"}
             icon={"arrow_down"}
             level="8"
             onPress={() => navigate("SellBxg")}
@@ -227,10 +281,11 @@ const themedStyles = StyleService.create({
     marginLeft: 4,
   },
   icon: {
-    width: 12,
-    height: 12,
+    alignSelf: "center",
+    width: 24,
+    height: 24,
     tintColor: "text-white-color",
-    marginLeft: 16,
+    // marginLeft: 16,
   },
   coin: {
     width: 16,
@@ -248,6 +303,11 @@ const themedStyles = StyleService.create({
   },
   contentWallet: {
     paddingHorizontal: 24,
+  },
+  contentCategories: {
+    paddingTop: 12,
+    paddingLeft: 24,
+    paddingBottom: 12,
   },
 });
 const LIST_COIN = [Images.crypto.bxg, Images.crypto.bnb, Images.crypto.usdt];

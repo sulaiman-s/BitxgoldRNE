@@ -13,6 +13,8 @@ import {
 
 import { Container, Content, Text, NavigationAction } from "components";
 import Images from "assets/images";
+import { useDispatch } from "react-redux";
+import { logout } from "reduxKit/reducers/slices";
 
 interface Props {
   id: number;
@@ -20,6 +22,7 @@ interface Props {
   icon: string;
   color: ColorValue | string;
   tintColor: ColorValue | string;
+  handle: Function;
 }
 interface ItemProps {
   item: Props;
@@ -29,10 +32,20 @@ interface ItemProps {
 const Profile02 = React.memo(() => {
   const { bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
+  const dispatch = useDispatch();
   const theme = useTheme();
   const RenderItem = React.useCallback(({ item, onPress }: ItemProps) => {
     return (
-      <TouchableOpacity activeOpacity={0.7}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        //@ts-ignore
+        onPress={() => {
+          if (item.title == "Log Out") dispatch(logout());
+          else {
+            item.handle();
+          }
+        }}
+      >
         <Layout style={styles.item} level="2">
           <View style={styles.flexRow}>
             <View style={[styles.icon, { backgroundColor: item.color }]}>
@@ -105,7 +118,10 @@ const Profile02 = React.memo(() => {
         </View>
         {data.map((item, index) => (
           <View style={{ paddingHorizontal: 24 }} key={index}>
-            <RenderItem item={item} />
+            <RenderItem
+              //@ts-ignore
+              item={item}
+            />
           </View>
         ))}
       </Content>
@@ -183,6 +199,9 @@ const data = [
     icon: "grid_four",
     color: "#949398",
     tintColor: "text-white-color",
+    handle: function () {
+      console.log(this.id, "clicked");
+    },
   },
   {
     id: 0,
@@ -190,6 +209,9 @@ const data = [
     icon: "target",
     color: "#FBF0EA",
     tintColor: "text-primary-color",
+    handle: function () {
+      console.log(this.id, "clicked");
+    },
   },
   {
     id: 2,
@@ -197,6 +219,9 @@ const data = [
     icon: "shield",
     color: "#215190",
     tintColor: "text-white-color",
+    handle: function () {
+      console.log(this.id, "clicked");
+    },
   },
   {
     id: 3,
@@ -204,5 +229,8 @@ const data = [
     icon: "switch",
     color: "#C06363",
     tintColor: "text-white-color",
+    handle: function () {
+      console.log(this.id, "clicked");
+    },
   },
 ];
