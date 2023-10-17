@@ -4,7 +4,7 @@
     "slug": "tramkam",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/ic_launcher.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logobitx.png",
@@ -17,15 +17,15 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/ic_launcher_foreground.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.timivietnam.tramkam",
+      "package": "com.bitxgold",
       "versionCode": 1
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.timivietnam.tramkam",
+      "bundleIdentifier": "com.bitxgold",
       "buildNumber": "1.0.0",
       "infoPlist": {
         "UIBackgroundModes": ["audio"]
