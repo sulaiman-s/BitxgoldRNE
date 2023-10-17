@@ -12,6 +12,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Profile05 from "screens/Crypto/StakeClaim";
 import Profile02 from "screens/Crypto/Profile";
+import TransactionHistory from "screens/Crypto/Transaction";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<CryptoStackParamList>();
@@ -29,6 +30,7 @@ const CryptoaNavigator = () => {
       />
       <Stack.Screen name="SellBxg" component={ExchangeBxgWithUsdt} />
       <Stack.Screen name="Transfer" component={Transfer} />
+      <Stack.Screen name="History" component={TransactionHistory} />
     </Stack.Navigator>
   );
 };

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Image, ImageBackground } from "react-native";
+import { Image, ImageBackground, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleService,
@@ -9,6 +9,7 @@ import {
   Button,
   Divider,
   Input,
+  Spinner,
 } from "@ui-kitten/components";
 
 import {
@@ -26,37 +27,53 @@ import { navigate } from "navigation/RootNavigation";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "reduxKit/reducers/slices";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { Ionicons } from "@expo/vector-icons";
+import Loader from "components/Loader";
 
 const SignIn02 = React.memo(() => {
   const { goBack } = useNavigation();
   const styles = useStyleSheet(themedStyles);
   const { height, width, top, bottom } = useLayout();
+  const [error, setError] = React.useState<any>();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const dispatch = useDispatch();
-  const [activeTab, setAtivedTab] = React.useState(0);
+  const [loader, setLoader] = React.useState(false);
+  const [show, setShow] = React.useState(false);
+  const passwordShow = () => setShow(!show);
+
+  //@ts-ignore
+  const renderIcon = (props): React.ReactElement => (
+    <TouchableWithoutFeedback onPress={passwordShow}>
+      <Icon
+        {...props}
+        name={show ? "eye-off" : "eye"}
+        style={{ height: 20, width: 20 }}
+      />
+    </TouchableWithoutFeedback>
+  );
 
   const handleLogin = () => {
+    setLoader(true);
     //@ts-ignore
     dispatch(login({ email, password }))
       .then(unwrapResult)
+      .then((payload: any) => {
+        setLoader(false);
+      })
       //@ts-ignore
       .catch((error) => {
-        console.log(error.message);
+        setLoader(false);
+        setError(error.message);
+        if (error.message === "Email is not verified.") {
+          navigate("verify", { email });
+        }
       });
   };
 
   return (
     <Container style={styles.container}>
-      <ImageBackground
-        source={Images.auth.background_01}
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-        resizeMode="cover"
-      >
-        {/* <TopNavigation
+      {/* <TopNavigation
         style={styles.topNavigation}
         accessoryRight={()=>
           <Image
@@ -66,54 +83,85 @@ const SignIn02 = React.memo(() => {
           />
         }
       /> */}
-        <Content contentContainerStyle={styles.content}>
-          <VStack mh={28} mt={40}>
-            <Text category="h3" marginBottom={4}>
-              Sign In
-            </Text>
-          </VStack>
+      <Content contentContainerStyle={styles.content}>
+        <VStack mh={28} mt={40}>
+          <Text style={{ fontFamily: "AlbertSans-Bold", fontSize: 24 }}>
+            Sign In
+          </Text>
+        </VStack>
 
-          <VStack mt={40}>
-            <Image
-              source={Images.logo}
-              // @ts-ignore
-              style={styles.logo}
-            />
-          </VStack>
+        <VStack mt={40}>
+          <Image
+            source={Images.logo}
+            // @ts-ignore
+            style={styles.logo}
+          />
+        </VStack>
 
-          <VStack mt={40}>
-            <Input
-              placeholder="Email"
-              style={styles.input}
-              accessoryLeft={<Icon pack="assets" name="user" />}
-              onChangeText={(t) => setEmail(t)}
-            />
-            <Input
-              placeholder="Password"
-              style={styles.input}
-              accessoryLeft={<Icon pack="assets" name="lock" />}
-              onChangeText={(t) => setPassword(t)}
-            />
-            <Button
-              children={"Sign In"}
-              style={styles.buttonSignIn}
-              onPress={handleLogin}
-            />
-          </VStack>
-          <VStack mt={18} alignSelfCenter>
-            <Text category="subhead" marginBottom={32}>
-              Create a new{" "}
-              <Text
-                category="subhead"
-                status="primary"
-                onPress={() => navigate("SignUp")}
-              >
-                account
-              </Text>
+        <VStack mt={90}>
+          <Input
+            placeholder="Email"
+            style={styles.input}
+            accessoryLeft={<Icon pack="assets" name="user" />}
+            onChangeText={(t) => {
+              setEmail(t);
+              setError(null);
+            }}
+          />
+          <Input
+            placeholder="Password"
+            style={styles.input}
+            accessoryLeft={<Icon pack="assets" name="lock" />}
+            accessoryRight={renderIcon}
+            onChangeText={(t) => {
+              setPassword(t);
+              setError(null);
+            }}
+            secureTextEntry={show ? false : true}
+          />
+          {error != null ? (
+            <Text
+              style={{
+                fontSize: 14,
+                textAlign: "center",
+                marginHorizontal: 15,
+                color: "red",
+              }}
+            >
+              {error}
             </Text>
-          </VStack>
-        </Content>
-      </ImageBackground>
+          ) : null}
+          <Button
+            children={"Sign In"}
+            style={styles.buttonSignIn}
+            onPress={handleLogin}
+            // accessoryRight={loader ? <Spinner size="large" /> : undefined}
+          />
+        </VStack>
+        <VStack mt={18} mh={32}>
+          <Text category="subhead" marginBottom={16}>
+            Forgot password?{" "}
+            <Text
+              category="subhead"
+              status="primary"
+              onPress={() => navigate("ForgotPassword")}
+            >
+              Click here
+            </Text>
+          </Text>
+          <Text category="subhead" marginBottom={16}>
+            Don't have an account?{" "}
+            <Text
+              category="subhead"
+              status="primary"
+              onPress={() => navigate("SignUp")}
+            >
+              Register here
+            </Text>
+          </Text>
+        </VStack>
+        <Loader visible={loader} />
+      </Content>
     </Container>
   );
 });

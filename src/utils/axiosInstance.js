@@ -1,7 +1,8 @@
 import axios from "axios";
-import { store } from "../../App";
+import { store } from "reduxKit/reducers/slices";
 
-axios.defaults.baseURL = "http://192.168.2.106:8080";
+export const baseURL = "https://nodeapi.bitx.gold";
+axios.defaults.baseURL = baseURL;
 
 const axiosInstance = axios.create();
 

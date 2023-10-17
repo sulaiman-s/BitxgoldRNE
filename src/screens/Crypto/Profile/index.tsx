@@ -13,8 +13,9 @@ import {
 
 import { Container, Content, Text, NavigationAction } from "components";
 import Images from "assets/images";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "reduxKit/reducers/slices";
+import { useNavigation } from "@react-navigation/native";
 
 interface Props {
   id: number;
@@ -30,10 +31,57 @@ interface ItemProps {
 }
 
 const Profile02 = React.memo(() => {
+  const { navigate } = useNavigation();
   const { bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
+  //@ts-ignore
+  const { user_name, email, contact } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const theme = useTheme();
+  const data = [
+    {
+      id: 1,
+      title: "Transaction History",
+      icon: "grid_four",
+      color: "#949398",
+      tintColor: "text-white-color",
+      handle: function () {
+        //@ts-ignore
+        navigate("History");
+      },
+    },
+    // {
+    //   id: 0,
+    //   title: "Edit Profile",
+    //   icon: "target",
+    //   color: "#FBF0EA",
+    //   tintColor: "text-primary-color",
+    //   handle: function () {
+    //     console.log(this.id, "clicked");
+    //   },
+    // },
+    // {
+    //   id: 2,
+    //   title: "Change Password",
+    //   icon: "shield",
+    //   color: "#215190",
+    //   tintColor: "text-white-color",
+    //   handle: function () {
+    //     console.log(this.id, "clicked");
+    //   },
+    // },
+    {
+      id: 3,
+      title: "Log Out",
+      icon: "switch",
+      color: "#C06363",
+      tintColor: "text-white-color",
+      handle: function () {
+        console.log(this.id, "clicked");
+      },
+    },
+  ];
+
   const RenderItem = React.useCallback(({ item, onPress }: ItemProps) => {
     return (
       <TouchableOpacity
@@ -101,13 +149,14 @@ const Profile02 = React.memo(() => {
             />
             <View>
               <Text
-                children="Christy Mcdonald"
+                children={user_name}
                 marginLeft={12}
                 status="basic"
-                category="h4"
+                category="callout"
+                style={{ fontSize: 24 }}
               />
               <Text
-                children="ChristyMcdonal@gmail.com"
+                children={email}
                 marginTop={12}
                 category="subhead"
                 status="snow"
@@ -192,45 +241,3 @@ const themedStyles = StyleService.create({
     margin: 10,
   },
 });
-const data = [
-  {
-    id: 1,
-    title: "Transaction History",
-    icon: "grid_four",
-    color: "#949398",
-    tintColor: "text-white-color",
-    handle: function () {
-      console.log(this.id, "clicked");
-    },
-  },
-  {
-    id: 0,
-    title: "Edit Profile",
-    icon: "target",
-    color: "#FBF0EA",
-    tintColor: "text-primary-color",
-    handle: function () {
-      console.log(this.id, "clicked");
-    },
-  },
-  {
-    id: 2,
-    title: "Change Password",
-    icon: "shield",
-    color: "#215190",
-    tintColor: "text-white-color",
-    handle: function () {
-      console.log(this.id, "clicked");
-    },
-  },
-  {
-    id: 3,
-    title: "Log Out",
-    icon: "switch",
-    color: "#C06363",
-    tintColor: "text-white-color",
-    handle: function () {
-      console.log(this.id, "clicked");
-    },
-  },
-];

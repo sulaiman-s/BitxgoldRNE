@@ -1,6 +1,6 @@
-import * as React from 'react';
-import {Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import * as React from "react";
+import { Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleService,
   useStyleSheet,
@@ -9,29 +9,54 @@ import {
   Button,
   Divider,
   Input,
-} from '@ui-kitten/components';
+} from "@ui-kitten/components";
 
-import {Container, Content, Text, VStack, HStack, NavigationAction} from 'components';
-import Images from 'assets/images';
-import TabBar from 'components/TabBar';
-import { navigate } from 'navigation/RootNavigation';
-
+import {
+  Container,
+  Content,
+  Text,
+  VStack,
+  HStack,
+  NavigationAction,
+} from "components";
+import Images from "assets/images";
+import TabBar from "components/TabBar";
+import { navigate } from "navigation/RootNavigation";
+import * as Yup from "yup";
+import { Formik } from "formik";
 const SignUp02 = React.memo(() => {
-  const {goBack} = useNavigation();
+  const { goBack } = useNavigation();
   const styles = useStyleSheet(themedStyles);
+  const ErrorMessage = (
+    //@ts-ignore
+    { error, visible }
+  ) => {
+    if (!visible || !error) return null;
+    return (
+      <Text
+        style={{
+          fontSize: 14,
+          textAlign: "center",
+          marginHorizontal: 15,
+          color: "red",
+        }}
+      >
+        {error}
+      </Text>
+    );
+  };
 
-  const [activeTab, setAtivedTab] = React.useState(0);
   return (
     <Container style={styles.container}>
       <TopNavigation
         style={styles.topNavigation}
-        accessoryRight={()=>
+        accessoryRight={() => (
           <Image
             source={Images.logo}
             // @ts-ignore
             style={styles.logo}
           />
-        }
+        )}
       />
       <Content contentContainerStyle={styles.content}>
         <VStack mh={28}>
@@ -74,20 +99,40 @@ const SignUp02 = React.memo(() => {
           <Divider style={styles.divider} />
         </HStack> */}
         <VStack mt={50}>
-        <Input placeholder="Username" style={styles.input} accessoryLeft={<Icon pack='assets' name='user'/>}/>
-        <Input placeholder="Email" style={styles.input} accessoryLeft={<Icon pack='assets' name='email'/>}/>
-        <Input placeholder="Phone Number" style={styles.input} accessoryLeft={<Icon pack='assets' name='phone'/>}/>
-        <Input placeholder="Password" style={styles.input}accessoryLeft={<Icon pack='assets' name='lock'/>} />
-        <Button children={'Sign In'} style={styles.buttonSignIn} />
+          <Input
+            placeholder="Username"
+            style={styles.input}
+            accessoryLeft={<Icon pack="assets" name="user" />}
+          />
+          <Input
+            placeholder="Email"
+            style={styles.input}
+            accessoryLeft={<Icon pack="assets" name="email" />}
+          />
+          <Input
+            placeholder="Phone Number"
+            style={styles.input}
+            accessoryLeft={<Icon pack="assets" name="phone" />}
+          />
+          <Input
+            placeholder="Password"
+            style={styles.input}
+            accessoryLeft={<Icon pack="assets" name="lock" />}
+          />
+          <Button children={"Sign In"} style={styles.buttonSignIn} />
         </VStack>
         <VStack mt={18} alignSelfCenter>
           <Text category="subhead" marginBottom={32}>
-            Already have an account?{' '}
-            <Text category="subhead" status="primary" onPress={()=>navigate('SignIn')}>
+            Already have an account?{" "}
+            <Text
+              category="subhead"
+              status="primary"
+              onPress={() => navigate("SignIn")}
+            >
               Login
             </Text>
           </Text>
-          </VStack>
+        </VStack>
       </Content>
     </Container>
   );
@@ -120,7 +165,7 @@ const themedStyles = StyleService.create({
   },
   divider: {
     height: 1,
-    width: '20%',
+    width: "20%",
   },
   input: {
     marginBottom: 16,

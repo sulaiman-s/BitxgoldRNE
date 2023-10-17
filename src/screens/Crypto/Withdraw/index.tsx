@@ -30,6 +30,11 @@ import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
 import { Picker } from "@react-native-picker/picker";
 import TabBarProfile from "../../../components/TabBarProfile";
+import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "utils/axiosInstance";
+import Loader from "components/Loader";
+import SuccessModel from "components/SuccessModel";
+import { fetchBalance } from "reduxKit/reducers/slices";
 
 interface CoinFromProps {
   id: string;
@@ -43,32 +48,109 @@ const ExchangeBxgWithUsdt = React.memo(() => {
   const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const [selectedLanguage, setSelectedLanguage] = React.useState();
-
-  const { show: showTo, hide: hideTo, modalRef: modalTo } = useModal();
-  const { show: showFrom, hide: hideFrom, modalRef: modalFrom } = useModal();
+  const dispatch = useDispatch();
+  const [walletAddress, setWallet] = React.useState("");
+  const [tokenValue, setTokenValue] = React.useState("");
+  //@ts-ignore
+  const { bxg, usdt, bnb } = useSelector((state) => state.wallet);
+  //@ts-ignore
+  const { id, wallet_public_key } = useSelector((state) => state.user);
+  const [loader, setLoader] = React.useState(false);
+  const [showSuccess, setShowSuccess] = React.useState(false);
+  const [err, setError] = React.useState<any>(null);
 
   const [selectedIndex, setSelectedIndex] = React.useState<
     IndexPath | IndexPath[]
-  >(new IndexPath(0));
+  >(new IndexPath(1));
 
   const showToast = (message: any) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
-  const qrValue = "0x0000000000000000000000";
+  const qrValue = wallet_public_key;
   const handleCopy = () => {
     Clipboard.setStringAsync(qrValue);
     showToast("Text copied!");
   };
 
-  const [coinFrom, setCoinFrom] = React.useState(DATA[0]);
-  const [showAll, setShowAll] = React.useState(true);
+  const handleWidthdraw = async () => {
+    setLoader(true);
+    const inpvalue = Number(tokenValue);
+    if (walletAddress === "") {
+      setLoader(false);
+      setError("Please Enter Wallet Address");
+      return;
+    }
+    if (inpvalue === 0) {
+      setLoader(false);
+      setError("Please Enter Amount");
+      return;
+    }
+    //@ts-ignore
+    const token = selectedIndex.row;
+
+    if (token === 1) {
+      if (inpvalue > bxg) {
+        setLoader(false);
+        setError("Insufficient BXG Balance");
+        return;
+      }
+    } else if (token === 2) {
+      if (inpvalue > bnb) {
+        setLoader(false);
+        setError("Insufficient Balance");
+        return;
+      }
+    } else if (token === 0) {
+      if (inpvalue > usdt) {
+        setLoader(false);
+        setError("Insufficient Balance");
+        return;
+      }
+    }
+    const token_name =
+      //@ts-ignore
+      selectedIndex.row == 0
+        ? "usdt"
+        : //@ts-ignore
+        selectedIndex.row == 1
+        ? "bxg"
+        : //@ts-ignore
+        selectedIndex.row == 2
+        ? "bnb"
+        : "bxg";
+
+    const requestBody = {
+      user_id: id,
+      amount: inpvalue,
+      wallet_address: walletAddress,
+    };
+    try {
+      //@ts-ignore
+      await axiosInstance
+        .post("/api/withdrawcrypto/" + token_name, requestBody)
+        .then((res) => {
+          setLoader(false);
+          if (res.data.status) {
+            //@ts-ignore
+            dispatch(fetchBalance(id));
+            setShowSuccess(true);
+          }
+        })
+        .catch((err) => {
+          setLoader(false);
+          setError(err.response.data.message);
+        });
+    } catch (error: any) {
+      setLoader(false);
+      setError(error.message);
+    }
+  };
 
   return (
     <Container style={styles.container} level="2">
       <TopNavigation
         appearance="control"
-        title={() => <Text category="callout">Withdraw</Text>}
+        title={() => <Text category="callout">Deposit | Withdraw</Text>}
         accessoryLeft={() => <NavigationAction status="primary" />}
       />
       <Content>
@@ -93,8 +175,8 @@ const ExchangeBxgWithUsdt = React.memo(() => {
                 <Text style={{ marginTop: 4 }} category="callout">
                   Wallet Address:
                 </Text>
-                <Text category="footnote" style={{ marginBottom: 20 }}>
-                  0x0000000000000000000000000
+                <Text category="c1" style={{ marginBottom: 20 }}>
+                  {wallet_public_key}
                 </Text>
                 <VStack style={{ width: "100%" }}></VStack>
               </VStack>
@@ -104,7 +186,11 @@ const ExchangeBxgWithUsdt = React.memo(() => {
                 <HStack mb={8}>
                   <Text category="callout">Wallet Address</Text>
                 </HStack>
-                <Input style={styles.input} placeholder="0x00000000000000" />
+                <Input
+                  style={styles.input}
+                  placeholder="0x00000000000000"
+                  onChangeText={(t) => setWallet(t)}
+                />
               </VStack>
               <VStack mh={24} mt={16} mv={10}>
                 <HStack mb={-8}>
@@ -122,7 +208,12 @@ const ExchangeBxgWithUsdt = React.memo(() => {
                     height: 60,
                   }}
                 >
-                  <Input placeholder="100" style={styles.search} size="giant" />
+                  <Input
+                    placeholder="100"
+                    style={styles.search}
+                    size="giant"
+                    onChangeText={(t) => setTokenValue(t)}
+                  />
                   <Select
                     selectedIndex={selectedIndex}
                     value={
@@ -135,7 +226,7 @@ const ExchangeBxgWithUsdt = React.memo(() => {
                         : //@ts-ignore
                         selectedIndex.row == 2
                         ? "BNB"
-                        : "USDT"
+                        : "BXG"
                     }
                     size="large"
                     status="control"
@@ -149,20 +240,69 @@ const ExchangeBxgWithUsdt = React.memo(() => {
                   </Select>
                 </HStack>
                 <Text category="c1" status="platinum" marginBottom={20}>
-                  Balance: 2,356.89 BXG
+                  {`Balance: ${
+                    //@ts-ignore
+                    selectedIndex.row == 0
+                      ? `${usdt} USDT`
+                      : //@ts-ignore
+                      selectedIndex.row == 1
+                      ? `${bxg} BXG`
+                      : //@ts-ignore
+                      selectedIndex.row == 2
+                      ? `${bnb} BNB`
+                      : `${bxg} BXG`
+                  }`}
                 </Text>
               </VStack>
             </VStack>
           </ViewPager>
         </Content>
+        {err ? (
+          <Text
+            style={{
+              fontSize: 14,
+              textAlign: "center",
+              marginHorizontal: 15,
+              color: "red",
+            }}
+          >
+            {err}
+          </Text>
+        ) : null}
       </Content>
       <Button
         children={activeIndex === 0 ? "Copy" : "Withdraw"}
         style={styles.button}
         onPress={() => {
-          if (activeIndex === 1) {
+          if (activeIndex === 0) {
             handleCopy();
+          } else {
+            handleWidthdraw();
           }
+        }}
+      />
+      <Loader visible={loader} />
+      <SuccessModel
+        modalVisible={showSuccess}
+        name={"Buy"}
+        msg={`Successfully sent ${tokenValue} ${
+          //@ts-ignore
+          selectedIndex.row == 0
+            ? "USDT"
+            : //@ts-ignore
+            selectedIndex.row == 1
+            ? "BXG"
+            : //@ts-ignore
+            selectedIndex.row == 2
+            ? "BNB"
+            : "BXG"
+        }`}
+        isName={true}
+        // isbank={true}
+        isSubmit={true}
+        onPress={() => {
+          setShowSuccess(!showSuccess);
+          goBack();
         }}
       />
     </Container>

@@ -36,6 +36,8 @@ export type AuthStackParamList = {
   ForgotPassword: undefined;
   Verify: undefined;
   Authenticate: undefined;
+  success:undefined;
+  verify:undefined
 };
 
 export type ProfileStackParamList = {
@@ -134,7 +136,7 @@ export type HealthStackParamList = {
 };
 export type CryptoStackParamList = {
   CryptoIntro: undefined;
-  Crypto01: undefined;
+  History: undefined
   Crypto02: undefined;
   Home: undefined;
   DepositTrhoughPlatform: undefined;

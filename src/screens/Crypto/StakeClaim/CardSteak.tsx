@@ -11,7 +11,10 @@ import {
 
 import Text from "components/Text";
 
-const CardSteak = () => {
+const CardSteak = (
+  //@ts-ignore
+  { totalAmountStacked, totalAmountClaimed }
+) => {
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   return (
@@ -20,7 +23,7 @@ const CardSteak = () => {
         <View style={styles.btm}>
           <Text center children="Total Staked" category="callout" />
           <Text
-            children="11 BXG"
+            children={`${totalAmountStacked} BXG`}
             marginTop={4}
             category="subhead"
             status="snow"
@@ -32,7 +35,7 @@ const CardSteak = () => {
         <View style={styles.btm}>
           <Text center children="Total Claimed" category="callout" />
           <Text
-            children="8 BXG"
+            children={`${totalAmountClaimed} BXG`}
             marginTop={4}
             category="subhead"
             status="snow"

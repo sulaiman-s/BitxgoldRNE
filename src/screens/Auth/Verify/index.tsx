@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {Image} from 'react-native';
+import * as React from "react";
+import { Image } from "react-native";
 import {
   StyleService,
   useStyleSheet,
@@ -7,26 +7,52 @@ import {
   Input,
   Icon,
   Button,
-} from '@ui-kitten/components';
+  Spinner,
+} from "@ui-kitten/components";
 
-import {Container, Content, Text, NavigationAction, HStack} from 'components';
-import Images from 'assets/images';
-import useCountDownUtil from 'utils/useCountDownUtil';
+import { Container, Content, Text, NavigationAction, HStack } from "components";
+import Images from "assets/images";
+import useCountDownUtil from "utils/useCountDownUtil";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { baseURL } from "utils/axiosInstance";
+import SuccessModel from "components/SuccessModel";
 
-const Verify = React.memo(() => {
+const Verify = React.memo(({ route }: any) => {
   const styles = useStyleSheet(themedStyles);
   const [time, reset] = useCountDownUtil(30);
+  const emailPass = route.params.email;
+  const [email, setEmail] = React.useState(emailPass);
+  const [error, setError] = React.useState<any>();
+  const [loader, setLoader] = React.useState(false);
+  const [showsuccess, setShowSuccess] = React.useState(false);
+
+  const { goBack } = useNavigation();
+
+  const handleVerification = async () => {
+    setLoader(true);
+    const { data } = await axios.post(baseURL + "/api/auth/email-verify", {
+      email: email,
+    });
+    if (data?.status === true) {
+      setLoader(false);
+      setShowSuccess(true);
+    } else {
+      setLoader(false);
+      setError(data?.message);
+    }
+  };
 
   return (
     <Container style={styles.container}>
       <TopNavigation
-        accessoryRight={
+        accessoryRight={() => (
           <NavigationAction icon="xcircle" status="placeholder" size="giant" />
-        }
+        )}
       />
       <Content contentContainerStyle={styles.content}>
         <Image
-          source={Images.auth.verify}
+          source={Images.auth.shield}
           //@ts-ignore
           style={styles.image}
         />
@@ -34,38 +60,73 @@ const Verify = React.memo(() => {
           Verify User!
         </Text>
         <Text category="body" status="placeholder" marginBottom={32}>
-          We have send code to your phonenumber and your email!
+          After clicking the confirm the verification link will be sent to your
+          email!
         </Text>
         <Input
           placeholder="Code from email"
           accessoryLeft={<Icon pack="assets" name="email" />}
-          accessoryRight={() => (
-            <Text category="subhead" status="primary">
-              Resend
-            </Text>
-          )}
+          // accessoryRight={() => (
+          //   <Text category="subhead" status="primary">
+          //     Resend
+          //   </Text>
+          // )}
           style={styles.input}
+          value={email}
+          onChangeText={(t) => {
+            setError(null);
+            setEmail(t);
+          }}
         />
-        <Input
+        {/* <Input
           placeholder="Code from phonenumber"
           accessoryLeft={<Icon pack="assets" name="phone" />}
-          accessoryRight={() => (
-            <Text category="subhead" status="primary">
-              Resend
-            </Text>
-          )}
+          // accessoryRight={() => (
+          //   <Text category="subhead" status="primary">
+          //     Resend
+          //   </Text>
+          // )}
           style={styles.input}
+          disabled
+          value={email}
+        /> */}
+        <Button
+          children={"Confirm"}
+          accessoryRight={<Icon pack="assets" name="caret_right" />}
+          accessoryLeft={loader ? <Spinner size="small" /> : undefined}
+          style={{ width: "70%", alignSelf: "center" }}
+          onPress={handleVerification}
         />
+        {error ? (
+          <Text
+            style={{
+              fontSize: 14,
+              textAlign: "center",
+              marginHorizontal: 15,
+              color: "red",
+            }}
+          >
+            {error}
+          </Text>
+        ) : null}
       </Content>
       <HStack itemsCenter mh={32} mb={8}>
-        <Text category="body" status="primary">
+        {/* <Text category="body" status="primary">
           Expried {time}
-        </Text>
-        <Button
-          children={'Confirm'}
-          accessoryRight={<Icon pack="assets" name="caret_right" />}
-        />
+        </Text> */}
       </HStack>
+      <SuccessModel
+        modalVisible={showsuccess}
+        name={"Buy"}
+        msg={`Email Sent Successfully.`}
+        isName={true}
+        // isbank={true}
+        isSubmit={true}
+        onPress={() => {
+          setShowSuccess(!showsuccess);
+          goBack();
+        }}
+      />
     </Container>
   );
 });
@@ -80,8 +141,10 @@ const themedStyles = StyleService.create({
     paddingHorizontal: 32,
   },
   image: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: 32,
+    height: 150,
+    width: 150,
   },
   input: {
     marginBottom: 16,

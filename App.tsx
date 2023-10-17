@@ -17,16 +17,15 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AssetsIconsPack from "assets/AssetsIconsPack";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import { reducer } from "reduxKit/reducers/slices";
+import { store } from "reduxKit/reducers/slices";
+
 LogBox.ignoreLogs([
   "AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage",
-  "Button: unsupported configuration.",
-  "The object notation for `createSlice.extraReducers` is deprecated, and will be removed in RTK 2.0. Please use the 'builder callback' notation instead: https://redux-toolkit.js.org/api/createSlice",
 ]);
 
-export const store = configureStore({
-  reducer: reducer,
-});
+// export const store = configureStore({
+//   reducer: reducer,
+// });
 
 export default function App() {
   const [theme, setTheme] = React.useState<"light" | "dark">("light");

@@ -4,6 +4,7 @@ import {
   Image,
   ImageRequireSource,
   ToastAndroid,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -33,6 +34,11 @@ import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
 import keyExtractor from "utils/keyExtractor";
 import FriendItem, { FriendProps } from "./FriendItem";
+import { useDispatch, useSelector } from "react-redux";
+import { Ionicons } from "@expo/vector-icons";
+import { unwrapResult } from "@reduxjs/toolkit";
+import Loader from "components/Loader";
+import { fetchBalance } from "reduxKit/reducers/slices";
 
 interface CoinFromProps {
   id: string;
@@ -45,7 +51,22 @@ const Wallet = React.memo(() => {
   const { goBack } = useNavigation();
   const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [refresh, setRefresh] = React.useState(false);
+  const [loader, setLoader] = React.useState(false);
+  const dispatch = useDispatch();
+  const {
+    bxg,
+    bxg_staked,
+    total_earning,
+    referal_bonus,
+    staking_referral_bonus,
+    usdt,
+    bnb,
+  } =
+    //@ts-ignore
+    useSelector((state) => state.wallet);
+  //@ts-ignore
+  const { id } = useSelector((state) => state.user);
 
   const showToast = (message: any) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -56,11 +77,43 @@ const Wallet = React.memo(() => {
     showToast("Text copied!");
   };
 
-  const { show: showTo, hide: hideTo, modalRef: modalTo } = useModal();
-  const { show: showFrom, hide: hideFrom, modalRef: modalFrom } = useModal();
-
-  const [coinFrom, setCoinFrom] = React.useState(DATA[0]);
-  const [showAll, setShowAll] = React.useState(true);
+  const dataWallet = [
+    {
+      id: "0",
+      name: "Available Bxg",
+      amount: `${bxg ? bxg : 0.0} BXG`,
+    },
+    {
+      id: "1",
+      name: "Staked Bxg",
+      amount: `${bxg_staked ? bxg_staked : 0.0} BXG`,
+    },
+    {
+      id: "2",
+      name: "Referral Bonus",
+      amount: `${referal_bonus ? referal_bonus : 0.0} USDT`,
+    },
+    {
+      id: "3",
+      name: "Available Bnb",
+      amount: `${bnb ? bnb : 0.0} BNB`,
+    },
+    {
+      id: "4",
+      name: "Available Usdt",
+      amount: `${usdt ? usdt : 0.0} USDT`,
+    },
+    {
+      id: "5",
+      name: "Total Earnings",
+      amount: `${total_earning ? total_earning : 0.0} BXG`,
+    },
+    {
+      id: "6",
+      name: "Staking Referral Bonus",
+      amount: `${staking_referral_bonus ? staking_referral_bonus : 0.0} BXG`,
+    },
+  ];
 
   const renderFriendItem = React.useCallback(
     ({ name, amount, level }: FriendProps) => {
@@ -69,12 +122,34 @@ const Wallet = React.memo(() => {
     []
   );
 
+  React.useEffect(() => {
+    setLoader(true);
+    //@ts-ignore
+    dispatch(fetchBalance(id))
+      .then(unwrapResult)
+      .then((payload: any) => {
+        setLoader(false);
+      })
+      .catch((error: any) => {
+        setLoader(false);
+        console.log(error);
+      });
+  }, [refresh]);
+
   return (
     <Container style={styles.container} level="2">
       <TopNavigation
         appearance="control"
         title={() => <Text category="callout">Wallet</Text>}
         accessoryLeft={() => <NavigationAction status="primary" />}
+        accessoryRight={() => (
+          <TouchableOpacity
+            style={{ width: 50 }}
+            onPress={() => setRefresh(!refresh)}
+          >
+            <Ionicons name="reload-circle" size={30} />
+          </TouchableOpacity>
+        )}
       />
       {/* <Content> */}
       <FlatList
@@ -96,7 +171,7 @@ const Wallet = React.memo(() => {
                   style={styles.icon}
                 />
               )}
-              placeholder="Search author"
+              placeholder="Search"
               style={styles.input}
               size="small"
             />
@@ -116,6 +191,7 @@ const Wallet = React.memo(() => {
         numColumns={2}
       />
       {/* </Content> */}
+      <Loader visible={loader} />
     </Container>
   );
 });
@@ -187,44 +263,6 @@ const themedStyles = StyleService.create({
     paddingLeft: 16,
   },
 });
-
-const dataWallet = [
-  {
-    id: "0",
-    name: "Available Bxg",
-    amount: "56.23 BXG",
-  },
-  {
-    id: "1",
-    name: "Staked Bxg",
-    amount: "32 BXG",
-  },
-  {
-    id: "2",
-    name: "Referral Bonus",
-    amount: "11 USDT",
-  },
-  {
-    id: "3",
-    name: "Available Bnb",
-    amount: "0.4367 BNB",
-  },
-  {
-    id: "4",
-    name: "Available Usdt",
-    amount: "12 USDT",
-  },
-  {
-    id: "5",
-    name: "Total Earnings",
-    amount: "0.24 BXG",
-  },
-  {
-    id: "6",
-    name: "Staking Referral Bonus",
-    amount: "0.1 BXG",
-  },
-];
 
 const DATA: CoinFromProps[] = [
   { id: "1", image: Images.crypto.bitcoin, code: "BTC" },

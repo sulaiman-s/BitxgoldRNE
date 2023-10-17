@@ -7,6 +7,7 @@ import ForgotPassword from "screens/Auth/ForgotPassword";
 import Verify from "screens/Auth/Verify";
 import CreateAccount from "screens/Auth/CreateAccount";
 import Authenticate from "screens/Auth/Authenticate";
+import Success from "components/success";
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
@@ -19,6 +20,8 @@ const AuthNavigator = () => {
       <Stack.Screen name="Verify" component={Verify} />
       <Stack.Screen name="CreateAccount" component={CreateAccount} />
       <Stack.Screen name="Authenticate" component={Authenticate} />
+      <Stack.Screen name="success" component={Success} />
+      <Stack.Screen name="verify" component={Verify} />
     </Stack.Navigator>
   );
 };

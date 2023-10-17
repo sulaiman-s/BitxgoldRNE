@@ -1,5 +1,11 @@
 import * as React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useLayout } from "hooks";
 import {
@@ -25,8 +31,14 @@ import Wallet from "./Wallet";
 import ListItem from "components/list";
 import BottomTab from "components/BottomTab";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBalance, fetchUserData } from "reduxKit/reducers/slices";
-
+import {
+  fetchBalance,
+  fetchBxgHistory,
+  fetchUserData,
+} from "reduxKit/reducers/slices";
+import { unwrapResult } from "@reduxjs/toolkit";
+import Loader from "components/Loader";
+import { Ionicons } from "@expo/vector-icons";
 interface IButtonProps {
   onPress?(): void;
   title: string;
@@ -40,15 +52,16 @@ const Crypto03 = React.memo(() => {
   const { height, width, top, bottom } = useLayout();
   const styles = useStyleSheet(themedStyles);
   const dispatch = useDispatch();
-  const [showAll, setShowAll] = React.useState(true);
+  //@ts-ignore
+  const bxgHistory = useSelector((state) => state.bxg_history);
   //@ts-ignore
   const { bxg, bnb, usdt } = useSelector((state) => state.wallet);
   //@ts-ignore
   const { id } = useSelector((state) => state.user);
   //@ts-ignore
-  console.log(useSelector((state) => state.user));
-  //@ts-ignore
-  console.log(useSelector((state) => state.wallet));
+  const [loader, setloader] = React.useState(false);
+  const [refresh, setRefresh] = React.useState(false);
+
   const dataWallet = [
     {
       id: "0",
@@ -92,9 +105,9 @@ const Crypto03 = React.memo(() => {
     },
   ];
   const DATA = [
-    { icon: "bxg", name: "BXG", balance: bxg, color: "#0084F4" },
-    { icon: "usdt", name: "USDT", balance: usdt, color: "#00C48C" },
-    { icon: "bnb", name: "BNB", balance: bnb, color: "#FFA26B" },
+    { id: 0, icon: "bxg", name: "BXG", balance: bxg, color: "#0084F4" },
+    { id: 1, icon: "usdt", name: "USDT", balance: usdt, color: "#00C48C" },
+    { id: 2, icon: "bnb", name: "BNB", balance: bnb, color: "#FFA26B" },
   ];
 
   const IButton = ({ onPress, title, icon, level }: IButtonProps) => {
@@ -115,16 +128,53 @@ const Crypto03 = React.memo(() => {
     );
   };
 
-  React.useEffect(() => {
+  const fetchData = () => {
+    setloader(true);
     //@ts-ignore
-    dispatch(fetchBalance(id));
-  }, []);
+    dispatch(fetchUserData(id))
+      .then(unwrapResult)
+      .then((payload: any) => {})
+      //@ts-ignore
+      .catch((error) => {
+        setloader(false);
+        console.log(error);
+      });
+    //@ts-ignore
+    dispatch(fetchBalance(id))
+      .then(unwrapResult)
+      //@ts-ignore
+      .catch((error) => {
+        setloader(false);
+        console.log(error);
+      });
+    //@ts-ignore
+    dispatch(fetchBxgHistory(id))
+      .then(unwrapResult)
+      //@ts-ignore
+      .then((payload: any) => {
+        setloader(false);
+      })
+      .catch((error: any) => {
+        setloader(false);
+        console.log(error);
+      });
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, [refresh]);
 
   return (
     <Container style={styles.container}>
       <TopNavigation
         accessoryRight={() => (
-          <NavigationAction status="primary" icon="share" />
+          // <NavigationAction status="primary" icon="share" />
+          <TouchableOpacity
+            style={{ width: 40 }}
+            onPress={() => setRefresh(!refresh)}
+          >
+            <Ionicons name="reload-circle" size={30} />
+          </TouchableOpacity>
         )}
         accessoryLeft={() => (
           <Image
@@ -176,9 +226,10 @@ const Crypto03 = React.memo(() => {
           </HStack>
         </VStack> */}
         <Content style={styles.contentCategories} horizontal>
-          {DATA.map(({ color, icon, name, balance }, i) => {
+          {DATA.map(({ color, icon, name, balance, id }, i) => {
             return (
               <VStack
+                key={id}
                 padding={20}
                 border={8}
                 style={{
@@ -186,7 +237,6 @@ const Crypto03 = React.memo(() => {
                   width: 138 * (width / 375),
                   height: 152 * (height / 812),
                 }}
-                key={i}
                 mr={4}
                 justify="flex-start"
               >
@@ -231,25 +281,47 @@ const Crypto03 = React.memo(() => {
             onPress={() => navigate("Transfer")}
           />
         </HStack>
-        <Text
-          style={{ fontFamily: "AlbertSans-Bold" }}
-          marginLeft={16}
-          marginTop={32}
-          marginBottom={16}
-        >
-          Buy & Sell History
-        </Text>
+        <HStack mh={16} mt={32} mb={16}>
+          <Text style={{ fontFamily: "AlbertSans-Bold" }}>
+            Buy & Sell History
+          </Text>
+          <Text
+            style={{ fontFamily: "AlbertSans-Bold" }}
+            onPress={() => navigate("History")}
+          >
+            <Ionicons name="arrow-forward" size={20} color="blue" />
+          </Text>
+        </HStack>
         <Content contentContainerStyle={styles.contentWallet}>
-          {dataWallet.map((wallet, i) => {
-            return (
-              <ListItem
-                type={wallet.type}
-                status={wallet.status}
-                id={wallet.id}
-              />
-            );
-          })}
+          {loader ? (
+            <ActivityIndicator
+              size={"large"}
+              style={{ alignSelf: "center" }}
+              color={"#00FFFF"}
+            />
+          ) : bxgHistory.length > 0 ? (
+            bxgHistory.slice(0, 5).map(
+              //@ts-ignore
+              (item, i) => {
+                return (
+                  <ListItem
+                    id={i}
+                    bxg={item.bxg}
+                    usdt={item.bxg}
+                    type={item.type}
+                    status={item.status}
+                    time={item.createdAt}
+                  />
+                );
+              }
+            )
+          ) : (
+            <Text style={{ alignSelf: "center" }} status="primary">
+              No BXG History Found.
+            </Text>
+          )}
         </Content>
+        <Loader visible={loader} />
       </Content>
     </Container>
   );
