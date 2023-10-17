@@ -1,40 +1,43 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   StyleSheet,
   StyleProp,
   ViewStyle,
   LayoutChangeEvent,
-} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
+} from "react-native";
+import { useTheme } from "@ui-kitten/components";
 import Animated, {
   interpolate,
   interpolateColor,
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
 interface AnimatedStepProps {
   step: number;
   style?: StyleProp<ViewStyle>;
 }
 
-const AnimatedStep = ({step, style}: AnimatedStepProps) => {
+const AnimatedStep = ({ step, style }: AnimatedStepProps) => {
   const theme = useTheme();
 
   const Step = React.useCallback(
-    ({start, active}: {start?: boolean; active?: boolean}) => {
+    ({ start, active }: { start?: boolean; active?: boolean }) => {
       const [width, setWidth] = React.useState<number>(1);
 
-      const onLayout = React.useCallback(({nativeEvent}: LayoutChangeEvent) => {
-        setWidth(prev => {
-          if (prev !== nativeEvent.layout.width) {
-            return nativeEvent.layout.width;
-          }
-          return prev;
-        });
-      }, []);
+      const onLayout = React.useCallback(
+        ({ nativeEvent }: LayoutChangeEvent) => {
+          setWidth((prev) => {
+            if (prev !== nativeEvent.layout.width) {
+              return nativeEvent.layout.width;
+            }
+            return prev;
+          });
+        },
+        []
+      );
 
       const progress = useDerivedValue(() => {
         return active ? withTiming(1) : withTiming(0);
@@ -45,10 +48,10 @@ const AnimatedStep = ({step, style}: AnimatedStepProps) => {
           progress.value,
           [0, 0.99, 1],
           [
-            theme['color-basic-900'],
-            theme['color-basic-900'],
-            theme['color-primary-100'],
-          ],
+            theme["color-basic-900"],
+            theme["color-basic-900"],
+            theme["color-primary-100"],
+          ]
         );
 
         return {
@@ -60,7 +63,7 @@ const AnimatedStep = ({step, style}: AnimatedStepProps) => {
         const backgroundColor = interpolateColor(
           progress.value,
           [0, 1],
-          [theme['color-basic-900'], theme['color-primary-100']],
+          [theme["color-basic-900"], theme["color-primary-100"]]
         );
 
         const widthX = interpolate(progress.value, [0, 1], [0, width]);
@@ -79,17 +82,19 @@ const AnimatedStep = ({step, style}: AnimatedStepProps) => {
             {
               flex: start ? 0 : 1,
             },
-          ]}>
+          ]}
+        >
           <View
             onLayout={onLayout}
-            style={[styles.line, {backgroundColor: theme['color-basic-900']}]}>
+            style={[styles.line, { backgroundColor: theme["color-basic-900"] }]}
+          >
             <Animated.View style={lineStyle} />
           </View>
           <Animated.View style={[styles.dot, style]} />
         </View>
       );
     },
-    [],
+    []
   );
 
   return (
@@ -97,7 +102,7 @@ const AnimatedStep = ({step, style}: AnimatedStepProps) => {
       <Step start={true} active />
       <Step active={step >= 1} />
       <Step active={step >= 2} />
-      <Step active={step >= 3} />
+      {/* <Step active={step >= 3} /> */}
     </View>
   );
 };
@@ -106,14 +111,14 @@ export default AnimatedStep;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     paddingHorizontal: 64,
   },
   step: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
   },
   dot: {
     width: 16,
