@@ -24,7 +24,6 @@ import {
   NavigationAction,
   HStack,
   VStack,
-  IDivider,
 } from "components";
 import Images from "assets/images";
 import TabBarProfile from "../../../components/TabBarProfile";
@@ -32,11 +31,7 @@ import CardSteak from "./CardSteak";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "utils/axiosInstance";
 import { useState } from "react";
-import {
-  fetchBalance,
-  fetchBxgHistory,
-  fetchStakePageData,
-} from "reduxKit/reducers/slices";
+import { fetchBalance, fetchStakePageData } from "reduxKit/reducers/slices";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { getType, timer } from "utils/arrayFilter";
 import SuccessModel from "components/SuccessModel";

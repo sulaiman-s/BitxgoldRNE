@@ -1,14 +1,13 @@
 import * as React from "react";
-import { Image, ImageRequireSource, ToastAndroid } from "react-native";
+import { Image, ImageRequireSource } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useLayout, useModal } from "hooks";
+import { useLayout } from "hooks";
 import {
   StyleService,
   useStyleSheet,
   useTheme,
   TopNavigation,
   Input,
-  Icon,
   Button,
   ViewPager,
   Spinner,
@@ -419,26 +418,12 @@ const themedStyles = StyleService.create({
   button: {
     marginHorizontal: 24,
     marginTop: 18,
-    // marginBottom: 18,
     bottom: 0,
   },
-  // tabBar: {
-  //   marginHorizontal: 24,
-  //   marginTop: 16,
-  //   marginBottom: 8,
-  // },
   content: {
     paddingBottom: 40,
   },
   tabBar: {
     borderRadius: 12,
-    // borderTopLeftRadius: 24,
-    // borderTopRightRadius: 24,
   },
 });
-
-const DATA: CoinFromProps[] = [
-  { id: "1", image: Images.crypto.bitcoin, code: "BTC" },
-  { id: "2", image: Images.crypto.eth, code: "ETH" },
-  { id: "3", image: Images.crypto.sol, code: "SOL" },
-];

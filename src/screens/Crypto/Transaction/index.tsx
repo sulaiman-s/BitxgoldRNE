@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ActivityIndicator, Image, TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { useLayout } from "hooks";
 import {
   StyleService,
@@ -28,7 +28,6 @@ import {
 } from "reduxKit/reducers/slices";
 import ListItem from "components/list";
 import { timer } from "utils/arrayFilter";
-import TabBarProfile from "components/TabBarProfile";
 
 const TransactionHistory = React.memo(() => {
   const theme = useTheme();
@@ -105,12 +104,6 @@ const TransactionHistory = React.memo(() => {
           activeIndex={activeTab}
           onChange={setActiveTab}
         />
-        {/* <TabBarProfile
-          tabs={["Buy", "Sell", "Stake", "Withdraw"]}
-          activeIndex={activeTab}
-          onChange={setActiveTab}
-          style={styles.tabBar}
-        /> */}
         <ViewPager
           selectedIndex={activeTab}
           onSelect={setActiveTab}

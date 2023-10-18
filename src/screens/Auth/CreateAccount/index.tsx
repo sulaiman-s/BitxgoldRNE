@@ -1,12 +1,6 @@
 import React, { memo } from "react";
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
-import {
-  Button,
-  Input,
-  TopNavigation,
-  useTheme,
-  Icon,
-} from "@ui-kitten/components";
+import { StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { Button, Input, TopNavigation, Icon } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
 
 import Text from "components/Text";
@@ -16,11 +10,9 @@ import NavigationAction from "components/NavigationAction";
 import { SceneMap, TabView } from "react-native-tab-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import useLayout from "hooks/useLayout";
-import { navigate } from "navigation/RootNavigation";
-import { Ionicons } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import axiosInstance, { baseURL } from "utils/axiosInstance";
+import { baseURL } from "utils/axiosInstance";
 import Loader from "components/Loader";
 import SuccessModel from "components/SuccessModel";
 import axios from "axios";
@@ -29,7 +21,6 @@ import { registerData, updateRegData } from "reduxKit/reducers/slices";
 
 const CreateAccount = memo(() => {
   const { goBack } = useNavigation();
-  const theme = useTheme();
   const { width, bottom } = useLayout();
   const [index, setIndex] = React.useState<number>(0);
   const dispatch = useDispatch();
@@ -90,8 +81,6 @@ const CreateAccount = memo(() => {
         `${baseURL}/api/auth/register`,
         postData
       );
-      // setLoader(false);
-      // console.log(response);
       if (response.data.status) {
         setRequestFlow("Updating Refer...");
         const requestBody = {
@@ -400,26 +389,16 @@ const CreateAccount = memo(() => {
       </KeyboardAwareScrollView>
     );
   }, []);
-  // const Tab4 = React.useCallback(() => {
-  //   return (
-  //     <View>
-  //       <Text>Step 04.</Text>
-  //       <Button children="Go to Home !" style={styles.button} />
-  //     </View>
-  //   );
-  // }, [index]);
 
   const renderScene = SceneMap({
     first: Tab1,
     second: Tab2,
     third: Tab3,
-    // four: Tab4,
   });
   const [routes] = React.useState([
     { key: "first", title: "" },
     { key: "second", title: "" },
     { key: "third", title: "" },
-    // {key: 'four', title: ''},
   ]);
   return (
     <Container useSafeArea>

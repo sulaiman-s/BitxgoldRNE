@@ -14,12 +14,10 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/ic_launcher_foreground.png",
+        "foregroundImage": "./assets/ic_launcher_adaptive_fore.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.bitxgold",
@@ -30,9 +28,7 @@
       "bundleIdentifier": "com.bitxgold",
       "buildNumber": "1.0.0",
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ]
+        "UIBackgroundModes": ["audio"]
       }
     },
     "web": {

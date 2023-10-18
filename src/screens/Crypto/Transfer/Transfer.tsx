@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Image, ImageRequireSource } from "react-native";
+import { ImageRequireSource } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useLayout, useModal } from "hooks";
+import { useLayout } from "hooks";
 import {
   StyleService,
   useStyleSheet,
@@ -328,9 +328,3 @@ const themedStyles = StyleService.create({
     height: "100%",
   },
 });
-
-const DATA: CoinFromProps[] = [
-  { id: "1", image: Images.crypto.bitcoin, code: "BTC" },
-  { id: "2", image: Images.crypto.eth, code: "ETH" },
-  { id: "3", image: Images.crypto.sol, code: "SOL" },
-];

@@ -131,11 +131,6 @@ const Profile02 = React.memo(() => {
         accessoryLeft={() => (
           <View style={styles.topNav}>
             <NavigationAction icon="arrow_left" status="primary" size="giant" />
-            {/* <NavigationAction
-              icon="circles_four"
-              status="primary"
-              size="giant"
-            /> */}
           </View>
         )}
       />

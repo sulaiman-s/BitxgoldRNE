@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  View,
-  Image,
-  StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import { Image, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useLayout } from "hooks";
 import {
@@ -14,22 +8,11 @@ import {
   useTheme,
   TopNavigation,
   Icon,
-  Button,
 } from "@ui-kitten/components";
-import {
-  Container,
-  Content,
-  Text,
-  NavigationAction,
-  VStack,
-  HStack,
-  IDivider,
-} from "components";
+import { Container, Content, Text, VStack, HStack } from "components";
 import Images from "assets/images";
 import { navigate } from "navigation/RootNavigation";
-import Wallet from "./Wallet";
 import ListItem from "components/list";
-import BottomTab from "components/BottomTab";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBalance,
@@ -168,7 +151,6 @@ const Crypto03 = React.memo(() => {
     <Container style={styles.container}>
       <TopNavigation
         accessoryRight={() => (
-          // <NavigationAction status="primary" icon="share" />
           <TouchableOpacity
             style={{ width: 40 }}
             onPress={() => setRefresh(!refresh)}
@@ -191,40 +173,6 @@ const Crypto03 = React.memo(() => {
         Home
       </Text>
       <Content>
-        {/* <VStack level="6" padding={16} mh={20} border={12} mt={16}>
-          <HStack itemsCenter mb={12}>
-            <Text status="white">Your total value:</Text>
-            <HStack itemsCenter>
-              <Icon pack="assets" name="eye" style={styles.icon} />
-              <Icon pack="assets" name="info" style={styles.icon} />
-            </HStack>
-          </HStack>
-          <Text
-            category="h4"
-            status="white"
-            marginBottom={14}
-            //@ts-ignore
-            padding={10}
-          >
-            $100,246.31
-            <Text category="h7" status="white">
-              {" "}
-              +12%
-            </Text>
-          </Text>
-          <HStack justify="flex-start">
-            {LIST_COIN.map((item, i) => {
-              return (
-                <Image
-                  source={item}
-                  key={i}
-                  //@ts-ignore
-                  style={styles.coin}
-                />
-              );
-            })}
-          </HStack>
-        </VStack> */}
         <Content style={styles.contentCategories} horizontal>
           {DATA.map(({ color, icon, name, balance, id }, i) => {
             return (
@@ -382,38 +330,3 @@ const themedStyles = StyleService.create({
     paddingBottom: 12,
   },
 });
-const LIST_COIN = [Images.crypto.bxg, Images.crypto.bnb, Images.crypto.usdt];
-const TAB = [
-  {
-    id: "4",
-    image: Images.crypto.bnb,
-    name: "Binance",
-    describe: "BNB",
-    price: 14.44,
-    change: 8.06,
-  },
-  {
-    id: "1",
-    image: Images.crypto.bitcoin,
-    name: "Bitcoin",
-    describe: "BTC",
-    price: 14.44,
-    change: 8.06,
-  },
-  {
-    id: "2",
-    image: Images.crypto.eth,
-    name: "Ethereum",
-    describe: "ETH",
-    price: 14.44,
-    change: 8.06,
-  },
-  {
-    id: "4",
-    image: Images.crypto.sol,
-    name: "Solana",
-    describe: "SOL",
-    price: 14.44,
-    change: 8.06,
-  },
-];

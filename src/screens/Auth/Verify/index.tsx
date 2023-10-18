@@ -66,11 +66,6 @@ const Verify = React.memo(({ route }: any) => {
         <Input
           placeholder="Code from email"
           accessoryLeft={<Icon pack="assets" name="email" />}
-          // accessoryRight={() => (
-          //   <Text category="subhead" status="primary">
-          //     Resend
-          //   </Text>
-          // )}
           style={styles.input}
           value={email}
           onChangeText={(t) => {
@@ -78,18 +73,6 @@ const Verify = React.memo(({ route }: any) => {
             setEmail(t);
           }}
         />
-        {/* <Input
-          placeholder="Code from phonenumber"
-          accessoryLeft={<Icon pack="assets" name="phone" />}
-          // accessoryRight={() => (
-          //   <Text category="subhead" status="primary">
-          //     Resend
-          //   </Text>
-          // )}
-          style={styles.input}
-          disabled
-          value={email}
-        /> */}
         <Button
           children={"Confirm"}
           accessoryRight={<Icon pack="assets" name="caret_right" />}
@@ -110,11 +93,7 @@ const Verify = React.memo(({ route }: any) => {
           </Text>
         ) : null}
       </Content>
-      <HStack itemsCenter mh={32} mb={8}>
-        {/* <Text category="body" status="primary">
-          Expried {time}
-        </Text> */}
-      </HStack>
+      <HStack itemsCenter mh={32} mb={8}></HStack>
       <SuccessModel
         modalVisible={showsuccess}
         name={"Buy"}

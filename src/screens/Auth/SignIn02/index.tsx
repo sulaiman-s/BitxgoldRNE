@@ -1,33 +1,21 @@
 import * as React from "react";
-import { Image, ImageBackground, TouchableWithoutFeedback } from "react-native";
+import { Image, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleService,
   useStyleSheet,
-  TopNavigation,
   Icon,
   Button,
-  Divider,
   Input,
-  Spinner,
 } from "@ui-kitten/components";
 
-import {
-  Container,
-  Content,
-  Text,
-  VStack,
-  HStack,
-  NavigationAction,
-} from "components";
+import { Container, Content, Text, VStack } from "components";
 import Images from "assets/images";
-import TabBar from "components/TabBar";
 import { useLayout } from "hooks";
 import { navigate } from "navigation/RootNavigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { login } from "reduxKit/reducers/slices";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { Ionicons } from "@expo/vector-icons";
 import Loader from "components/Loader";
 
 const SignIn02 = React.memo(() => {
@@ -73,16 +61,6 @@ const SignIn02 = React.memo(() => {
 
   return (
     <Container style={styles.container}>
-      {/* <TopNavigation
-        style={styles.topNavigation}
-        accessoryRight={()=>
-          <Image
-            source={require("../../../assets/images/logo/logo.png")}
-            // @ts-ignore
-            style={styles.logo}
-          />
-        }
-      /> */}
       <Content contentContainerStyle={styles.content}>
         <VStack mh={28} mt={40}>
           <Text style={{ fontFamily: "AlbertSans-Bold", fontSize: 24 }}>
@@ -135,7 +113,6 @@ const SignIn02 = React.memo(() => {
             children={"Sign In"}
             style={styles.buttonSignIn}
             onPress={handleLogin}
-            // accessoryRight={loader ? <Spinner size="large" /> : undefined}
           />
         </VStack>
         <VStack mt={18} mh={32}>

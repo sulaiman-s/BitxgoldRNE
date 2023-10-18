@@ -1,14 +1,12 @@
 import * as React from "react";
 import {
   FlatList,
-  Image,
   ImageRequireSource,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useLayout, useModal } from "hooks";
+import { useLayout } from "hooks";
 import {
   StyleService,
   useStyleSheet,
@@ -16,24 +14,11 @@ import {
   TopNavigation,
   Input,
   Icon,
-  Button,
-  ViewPager,
 } from "@ui-kitten/components";
 
-import {
-  Container,
-  Content,
-  Text,
-  NavigationAction,
-  HStack,
-  VStack,
-} from "components";
-import Images from "assets/images";
-import BottomTab from "components/BottomTab";
-import QRCode from "react-native-qrcode-svg";
-import * as Clipboard from "expo-clipboard";
+import { Container, Text, NavigationAction } from "components";
 import keyExtractor from "utils/keyExtractor";
-import FriendItem, { FriendProps } from "./FriendItem";
+import FriendItem from "./FriendItem";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -67,15 +52,6 @@ const Wallet = React.memo(() => {
     useSelector((state) => state.wallet);
   //@ts-ignore
   const { id } = useSelector((state) => state.user);
-
-  const showToast = (message: any) => {
-    ToastAndroid.show(message, ToastAndroid.SHORT);
-  };
-  const qrValue = "0x0000000000000000000000";
-  const handleCopy = () => {
-    Clipboard.setStringAsync(qrValue);
-    showToast("Text copied!");
-  };
 
   const dataWallet = [
     {
@@ -114,13 +90,6 @@ const Wallet = React.memo(() => {
       amount: `${staking_referral_bonus ? staking_referral_bonus : 0.0} BXG`,
     },
   ];
-
-  const renderFriendItem = React.useCallback(
-    ({ name, amount, level }: FriendProps) => {
-      return <FriendItem level={level} name={name} amount={amount} />;
-    },
-    []
-  );
 
   React.useEffect(() => {
     setLoader(true);
@@ -263,9 +232,3 @@ const themedStyles = StyleService.create({
     paddingLeft: 16,
   },
 });
-
-const DATA: CoinFromProps[] = [
-  { id: "1", image: Images.crypto.bitcoin, code: "BTC" },
-  { id: "2", image: Images.crypto.eth, code: "ETH" },
-  { id: "3", image: Images.crypto.sol, code: "SOL" },
-];

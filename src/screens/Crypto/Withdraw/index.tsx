@@ -24,11 +24,8 @@ import {
   HStack,
   VStack,
 } from "components";
-import Images from "assets/images";
-import TabBar from "./TabBar";
 import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
-import { Picker } from "@react-native-picker/picker";
 import TabBarProfile from "../../../components/TabBarProfile";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "utils/axiosInstance";
@@ -384,11 +381,3 @@ const themedStyles = StyleService.create({
     height: "100%",
   },
 });
-
-const DATA: CoinFromProps[] = [
-  { id: "1", image: Images.crypto.bitcoin, code: "BTC" },
-  { id: "2", image: Images.crypto.eth, code: "ETH" },
-  { id: "3", image: Images.crypto.sol, code: "SOL" },
-];
-
-const dropdown = ["BXG", "USDT", "BNB"];
