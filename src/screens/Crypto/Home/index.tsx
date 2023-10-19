@@ -167,7 +167,10 @@ const Crypto03 = React.memo(() => {
         )}
       />
       <Text
-        style={{ fontFamily: "AlbertSans-Bold", fontSize: 19 }}
+        style={{
+          fontFamily: "AlbertSans-Bold",
+          fontSize: 19,
+        }}
         marginLeft={16}
       >
         Home
@@ -191,8 +194,13 @@ const Crypto03 = React.memo(() => {
                 <Image
                   //@ts-ignore
                   source={Images.crypto[icon]}
-                  //@ts-ignore
-                  style={styles.icon}
+                  style={[
+                    //@ts-ignore
+                    styles.icon,
+                    {
+                      tintColor: icon == "usdt" ? "white" : undefined,
+                    },
+                  ]}
                 />
                 <Text
                   category="callout"
@@ -230,14 +238,18 @@ const Crypto03 = React.memo(() => {
           />
         </HStack>
         <HStack mh={16} mt={32} mb={16}>
-          <Text style={{ fontFamily: "AlbertSans-Bold" }}>
+          <Text
+            category="subhead"
+            // status="primary"
+            style={{ fontFamily: "AlbertSans-Bold" }}
+          >
             Recent Transactions
           </Text>
           <Text
             style={{ fontFamily: "AlbertSans-Bold" }}
             onPress={() => navigate("History")}
           >
-            <Ionicons name="arrow-forward" size={20} color="blue" />
+            <Ionicons name="arrow-forward" size={20} color="#3366FF" />
           </Text>
         </HStack>
         <Content contentContainerStyle={styles.contentWallet}>
@@ -304,7 +316,7 @@ const themedStyles = StyleService.create({
     alignSelf: "center",
     width: 24,
     height: 24,
-    tintColor: "text-white-color",
+    // tintColor: "text-white-color",
     // marginLeft: 16,
   },
   coin: {

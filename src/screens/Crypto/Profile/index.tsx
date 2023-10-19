@@ -383,7 +383,7 @@ const themedStyles = StyleService.create({
     margin: 10,
   },
   dropDownMainBox: {
-    backgroundColor: "#cecece50",
+    backgroundColor: "#F7F9FC",
     borderRadius: 5,
     marginTop: 5,
     padding: 10,
@@ -395,6 +395,6 @@ const themedStyles = StyleService.create({
   dropDownBoxText: {
     // textAlign: "center",
     paddingLeft: "1%",
-    backgroundColor: "#cecece50",
+    backgroundColor: "#F7F9FC",
   },
 });

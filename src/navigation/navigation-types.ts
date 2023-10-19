@@ -143,9 +143,10 @@ export type CryptoStackParamList = {
   SellBxg: undefined;
   Wallet: undefined;
   Transfer: undefined;
-  Crypto08: undefined;
-  Crypto09: undefined;
-  Crypto10: undefined;
+  Buy: undefined;
+  Sell: undefined;
+  Stakee: undefined;
+  Withdraw: undefined;
 };
 export type FoodDeliveryStackParamList = {
   FoodDeliveryIntro: undefined;

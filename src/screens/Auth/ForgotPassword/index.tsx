@@ -56,7 +56,11 @@ const ForgotPassword = React.memo(() => {
           // @ts-ignore
           style={styles.img}
         />
-        <Text category="h2" center marginBottom={16}>
+        <Text
+          center
+          marginBottom={16}
+          style={{ fontSize: 25, fontFamily: "AlbertSans-Bold" }}
+        >
           Forgot Password
         </Text>
         <Text category="body" center marginBottom={16} marginHorizontal={32}>

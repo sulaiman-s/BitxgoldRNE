@@ -49,7 +49,7 @@ const CryptoTabNav = () => {
       screenOptions={{
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: { fontSize: 12, fontFamily: "AlbertSans-Regular" },
-        tabBarActiveTintColor: "blue",
+        tabBarActiveTintColor: "#3366FF",
         headerTitleStyle: { fontFamily: "AlbertSans-Regular" },
         headerShown: false,
       }}

@@ -105,7 +105,7 @@ const Stake = () => {
             )
           ) : (
             <Text style={{ alignSelf: "center" }} status="primary">
-              No stake History Found.
+              No Stake History Found.
             </Text>
           )}
           {!floader && displayCount < stake_page?.stakedData?.length && (
