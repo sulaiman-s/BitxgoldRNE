@@ -231,7 +231,7 @@ const Crypto03 = React.memo(() => {
         </HStack>
         <HStack mh={16} mt={32} mb={16}>
           <Text style={{ fontFamily: "AlbertSans-Bold" }}>
-            Buy & Sell History
+            Recent Transactions
           </Text>
           <Text
             style={{ fontFamily: "AlbertSans-Bold" }}

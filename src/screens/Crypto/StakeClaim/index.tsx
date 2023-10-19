@@ -167,7 +167,7 @@ const Profile05 = React.memo(() => {
       <TopNavigation
         appearance="control"
         title={() => <Text category="callout">Stake</Text>}
-        accessoryLeft={() => <NavigationAction status="primary" />}
+        // accessoryLeft={() => <NavigationAction status="primary" />}
         accessoryRight={() => (
           <TouchableOpacity
             style={{ width: 50 }}
@@ -260,20 +260,20 @@ const Profile05 = React.memo(() => {
                       level="1"
                     >
                       <HStack itemsCenter mb={8}>
-                        <Text category="subhead">Staked BXG</Text>
-                        <Text category="subhead" status="info">
+                        <Text category="c1">Staked BXG</Text>
+                        <Text category="c1" status="info">
                           {item.bxg}
                         </Text>
                       </HStack>
                       <HStack itemsCenter mb={8}>
-                        <Text category="subhead">Staked Time</Text>
-                        <Text category="subhead" status="warning">
+                        <Text category="c1">Elapsed Time</Text>
+                        <Text category="c1" status="warning">
                           {timer(item.stake_time)}
                         </Text>
                       </HStack>
-                      <HStack itemsCenter mb={8}>
-                        <Text category="subhead">Staked Date </Text>
-                        <Text category="subhead" status="success">
+                      <HStack itemsCenter mb={18}>
+                        <Text category="c1">Staked Date/Time </Text>
+                        <Text category="c1" status="success">
                           {new Date(item.stake_time).toLocaleString()}
                         </Text>
                       </HStack>

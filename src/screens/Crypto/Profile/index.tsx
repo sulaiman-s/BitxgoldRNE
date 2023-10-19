@@ -11,7 +11,7 @@ import {
   useTheme,
 } from "@ui-kitten/components";
 
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 import { Container, Content, Text, NavigationAction } from "components";
 import Images from "assets/images";
@@ -21,6 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UIManager } from "react-native";
 import { Platform } from "react-native";
 import { LayoutAnimation } from "react-native";
+import InfoModel from "components/InfoModel";
 
 interface Props {
   id: number;
@@ -42,8 +43,9 @@ const Profile02 = React.memo(() => {
   //@ts-ignore
   const { user_name, email, contact } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [visible, setVisible] = React.useState(false);
 
-  const [showData, setShowData] = React.useState(false)
+  const [showData, setShowData] = React.useState(false);
   const theme = useTheme();
   const data = [
     {
@@ -134,14 +136,10 @@ const Profile02 = React.memo(() => {
     },
   ];
 
-
   const RenderItem = React.useCallback(({ item, onPress }: ItemProps) => {
+    const [show, setShow] = React.useState(false);
 
-    const [show, setShow] = React.useState(false)
-    console.log('kk', show)
-
-
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
         UIManager.setLayoutAnimationEnabledExperimental(true);
       }
@@ -149,19 +147,17 @@ const Profile02 = React.memo(() => {
 
     if (item?.id == 1) {
       return (
-        <View >
+        <View>
           <TouchableOpacity
             activeOpacity={0.7}
             //@ts-ignore
 
             onPress={() => {
               LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut,
+                LayoutAnimation.Presets.easeInEaseOut
               );
               setShow(!show);
             }}
-
-
           >
             <Layout style={styles.item} level="2">
               <View style={styles.flexRow}>
@@ -180,43 +176,57 @@ const Profile02 = React.memo(() => {
                   category="callout"
                 />
               </View>
-              <Ionicons name={show ? "chevron-up" : "chevron-down"} size={24} color="black" />
+              <Ionicons
+                name={!show ? "chevron-forward" : "chevron-down"}
+                size={24}
+                color="black"
+              />
             </Layout>
           </TouchableOpacity>
-          {
-            show &&
+          {show && (
             <View style={styles.dropDownMainBox}>
-              <TouchableOpacity style={styles.dropDownBox} onPress={() => navigate('Buy')}>
-                <Text style={styles.dropDownBoxText}>Buy</Text>
+              <TouchableOpacity
+                style={styles.dropDownBox}
+                //@ts-ignore
+                onPress={() => navigate("Buy")}
+              >
+                <Text style={styles.dropDownBoxText}>- Buy</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.dropDownBox} onPress={() => navigate('Sell')}>
-                <Text style={styles.dropDownBoxText}>Sell</Text>
+              <TouchableOpacity
+                style={styles.dropDownBox}
+                //@ts-ignore
+                onPress={() => navigate("Sell")}
+              >
+                <Text style={styles.dropDownBoxText}>- Sell</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.dropDownBox} onPress={() => navigate('Stakee')}>
-                <Text style={styles.dropDownBoxText}>Stake</Text>
+              <TouchableOpacity
+                style={styles.dropDownBox}
+                //@ts-ignore
+                onPress={() => navigate("Stakee")}
+              >
+                <Text style={styles.dropDownBoxText}>- Stake</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.dropDownBox} onPress={() => navigate('Withdraw')}>
-                <Text style={styles.dropDownBoxText}>Withdraw</Text>
+              <TouchableOpacity
+                style={styles.dropDownBox}
+                //@ts-ignore
+                onPress={() => navigate("Withdraw")}
+              >
+                <Text style={styles.dropDownBoxText}>- Withdraw</Text>
               </TouchableOpacity>
-
-
             </View>
-          }
-
-
-
-        </View >
-      )
+          )}
+        </View>
+      );
     } else {
       return (
         <TouchableOpacity
           activeOpacity={0.7}
           //@ts-ignore
           onPress={() => {
-            if (item.title == "Log Out") dispatch(logout());
+            if (item.title == "Log Out") setVisible(!visible);
             else {
               item.handle();
             }
@@ -248,8 +258,6 @@ const Profile02 = React.memo(() => {
         </TouchableOpacity>
       );
     }
-
-
   }, []);
   return (
     <Container style={styles.container}>
@@ -300,6 +308,14 @@ const Profile02 = React.memo(() => {
           </View>
         ))}
       </Content>
+      <InfoModel
+        visible={visible}
+        type="confirmation"
+        title="Log Out Confirmation"
+        btnName="ok"
+        onConfirm={() => dispatch(logout())}
+        onCancel={() => setVisible(!visible)}
+      />
     </Container>
   );
 });
@@ -370,15 +386,15 @@ const themedStyles = StyleService.create({
     backgroundColor: "#cecece50",
     borderRadius: 5,
     marginTop: 5,
-    padding: 10
-
+    padding: 10,
   },
   dropDownBox: {
     backgroundColor: "#fff",
-    marginBottom: 5
+    marginBottom: 5,
   },
   dropDownBoxText: {
-    textAlign: "center",
-
-  }
+    // textAlign: "center",
+    paddingLeft: "1%",
+    backgroundColor: "#cecece50",
+  },
 });

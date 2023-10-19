@@ -90,6 +90,18 @@ const Wallet = React.memo(() => {
       amount: `${staking_referral_bonus ? staking_referral_bonus : 0.0} BXG`,
     },
   ];
+  const [searchData, setSearch] = React.useState<any>([]);
+
+  const handleSearchChange = (t: any) => {
+    let filtsearch = dataWallet.filter((x) =>
+      x.name.toLowerCase().includes(t.toLowerCase())
+    );
+    if (filtsearch.length > 0) {
+      setSearch(filtsearch);
+    } else {
+      setSearch([]);
+    }
+  };
 
   React.useEffect(() => {
     setLoader(true);
@@ -110,7 +122,7 @@ const Wallet = React.memo(() => {
       <TopNavigation
         appearance="control"
         title={() => <Text category="callout">Wallet</Text>}
-        accessoryLeft={() => <NavigationAction status="primary" />}
+        // accessoryLeft={() => <NavigationAction status="primary" />}
         accessoryRight={() => (
           <TouchableOpacity
             style={{ width: 50 }}
@@ -122,33 +134,35 @@ const Wallet = React.memo(() => {
       />
       {/* <Content> */}
       <FlatList
-        ListHeaderComponent={() => (
-          <View
-            style={{
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              paddingRight: 18,
-            }}
-          >
-            <Input
-              accessoryLeft={(props) => (
-                <Icon
-                  {...props}
-                  pack="assets"
-                  name="search16"
-                  style={styles.icon}
-                />
-              )}
-              placeholder="Search"
-              style={styles.input}
-              size="small"
-            />
-          </View>
-        )}
+        // ListHeaderComponent={() => (
+        //   <View
+        //     style={{
+        //       width: "100%",
+        //       justifyContent: "flex-start",
+        //       alignItems: "center",
+        //       paddingRight: 18,
+        //     }}
+        //   >
+        //     <Input
+        //       accessoryLeft={(props) => (
+        //         <Icon
+        //           {...props}
+        //           pack="assets"
+        //           name="search16"
+        //           style={styles.icon}
+        //         />
+        //       )}
+        //       placeholder="Search"
+        //       style={styles.input}
+        //       size="small"
+        //       disabled
+        //       // onChangeText={(t) => handleSearchChange(t)}
+        //     />
+        //   </View>
+        // )}
         contentContainerStyle={[
           styles.flatListFriend,
-          { paddingBottom: bottom + 60 },
+          { paddingBottom: bottom + 60, marginTop: 30 },
         ]}
         scrollEventThrottle={16}
         data={dataWallet}

@@ -88,7 +88,7 @@ const DepositTrhoughPlatform = React.memo(() => {
       const requestBody = {
         user_id: id,
         bxg: Number(bxgInp),
-        usdt: usdtinp.toFixed(2),
+        usdt: usdtinp,
       };
       //@ts-ignore
       await axiosInstance
@@ -127,7 +127,7 @@ const DepositTrhoughPlatform = React.memo(() => {
       const requestBody = {
         user_id: id,
         bxg: Number(bxgInp1),
-        usdt: usdtinp.toFixed(2),
+        usdt: usdtinp,
       };
       //@ts-ignore
       await axiosInstance
@@ -238,7 +238,7 @@ const DepositTrhoughPlatform = React.memo(() => {
                       : undefined
                   }
                   //@ts-ignore
-                  value={(Number(bxgInp) * ratio).toFixed(2).toString()}
+                  value={(Number(bxgInp) * ratio).toString()}
                   disabled
                 />
                 <Text category="c1" status="platinum" marginTop={8}>
@@ -311,7 +311,7 @@ const DepositTrhoughPlatform = React.memo(() => {
                       : undefined
                   }
                   disabled
-                  value={(Number(bxgInp1) * ratio).toFixed(2).toString()}
+                  value={(Number(bxgInp1) * ratio).toString()}
                 />
                 <Text
                   category="c1"
