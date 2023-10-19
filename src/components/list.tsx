@@ -20,7 +20,7 @@ const ListItem = ({
   const [showAll, setShowAll] = React.useState(false);
 
   return (
-    <VStack border={12} level="2" margin={0} padding={16} mb={12} key={id}>
+    <VStack key={id} border={12} level="2" margin={0} padding={16} mb={12} key={id}>
       <HStack itemsCenter>
         <HStack itemsCenter justify="flex-start">
           <Text category="c1" status="platinum">

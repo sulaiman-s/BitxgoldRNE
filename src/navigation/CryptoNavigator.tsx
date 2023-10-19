@@ -13,6 +13,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Profile05 from "screens/Crypto/StakeClaim";
 import Profile02 from "screens/Crypto/Profile";
 import TransactionHistory from "screens/Crypto/Transaction";
+import Buy from "screens/Crypto/Profile/Buy";
+import Sell from "screens/Crypto/Profile/Sell";
+import Stake from "screens/Crypto/Profile/Stake";
+import Withdraw from "screens/Crypto/Profile/Withdraw";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<CryptoStackParamList>();
@@ -31,6 +35,10 @@ const CryptoaNavigator = () => {
       <Stack.Screen name="SellBxg" component={ExchangeBxgWithUsdt} />
       <Stack.Screen name="Transfer" component={Transfer} />
       <Stack.Screen name="History" component={TransactionHistory} />
+      <Stack.Screen name="Buy" component={Buy} />
+      <Stack.Screen name="Sell" component={Sell} />
+      <Stack.Screen name="Stakee" component={Stake} />
+      <Stack.Screen name="Withdraw" component={Withdraw} />
     </Stack.Navigator>
   );
 };

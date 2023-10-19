@@ -76,7 +76,7 @@ const TabBar = ({ style, activeIndex, onChange, tabs }: ItemProps) => {
   );
 };
 
-export default TabBar;
+export default React.memo(TabBar);
 
 const styles = StyleSheet.create({
   container: {

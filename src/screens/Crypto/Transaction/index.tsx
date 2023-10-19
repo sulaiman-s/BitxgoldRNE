@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity, View, Button } from "react-native";
 import { useLayout } from "hooks";
 import {
   StyleService,
@@ -38,6 +38,8 @@ const TransactionHistory = React.memo(() => {
   const [floader, setfLoader] = React.useState(false);
   const [refresh, setRefresh] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
+  const [displayCount, setDisplayCount] = React.useState(3);
+
 
   //@ts-ignore
   const bxg_history = useSelector((state) => state.bxg_history);
@@ -48,13 +50,20 @@ const TransactionHistory = React.memo(() => {
   //@ts-ignore
   const user = useSelector((state) => state.user);
 
+
+  const filterForTypeBuy = bxg_history?.filter((item: any) => item.type.includes("Buy"))
+  const filterForTypeSell = bxg_history?.filter((item: any) => item.type.includes("Sell"))
+
+  const handleShowMore = () => {
+    setDisplayCount(displayCount + 3);
+  };
   const fetchData = () => {
     setfLoader(true);
     //@ts-ignore
     dispatch(fetchBxgHistory(user?.id))
       .then(unwrapResult)
       //@ts-ignore
-      .then((payload: any) => {})
+      .then((payload: any) => { })
       .catch((error: any) => {
         setfLoader(false);
         console.log(error);
@@ -62,7 +71,7 @@ const TransactionHistory = React.memo(() => {
     //@ts-ignore
     dispatch(fetchStakePageData(user?.id))
       .then(unwrapResult)
-      .then((payload: any) => {})
+      .then((payload: any) => { })
       .catch((error: any) => setfLoader(false));
 
     //@ts-ignore
@@ -78,6 +87,9 @@ const TransactionHistory = React.memo(() => {
     fetchData();
   }, [refresh]);
 
+  React.useEffect(() => {
+    setDisplayCount(3)
+  }, [activeTab]);
   return (
     <Container style={styles.container}>
       <VStack level="2" style={[styles.header, { paddingTop: top }]}>
@@ -116,34 +128,35 @@ const TransactionHistory = React.memo(() => {
                 style={{ alignSelf: "center" }}
                 color={"#00FFFF"}
               />
-            ) : bxg_history?.filter((item: any) => item.type.includes("Buy"))
-                .length > 0 ? (
-              bxg_history
-                ?.filter((item: any) => item.type.includes("Buy"))
-                .map(
-                  //@ts-ignore
-                  (item, i) => {
-                    return (
-                      <ListItem
-                        id={i}
-                        //@ts-ignore
-                        bxg={item.bxg}
-                        //@ts-ignore
-                        usdt={item.bxg}
-                        //@ts-ignore
-                        type={item.type}
-                        //@ts-ignore
-                        status={item.status}
-                        //@ts-ignore
-                        time={item.createdAt}
-                      />
-                    );
-                  }
-                )
+            ) : filterForTypeBuy?.length > 0 ? (
+              filterForTypeBuy?.slice(0, displayCount)?.map(
+                //@ts-ignore
+                (item, i) => {
+                  return (
+                    <ListItem
+                      id={i}
+                      //@ts-ignore
+                      bxg={item.bxg}
+                      //@ts-ignore
+                      usdt={item.bxg}
+                      //@ts-ignore
+                      type={item.type}
+                      //@ts-ignore
+                      status={item.status}
+                      //@ts-ignore
+                      time={item.createdAt}
+                    />
+                  );
+                }
+              )
+
             ) : (
               <Text style={{ alignSelf: "center" }} status="primary">
                 No Buy History Found.
               </Text>
+            )}
+            {!floader && displayCount < filterForTypeBuy?.length && (
+              <Button title="Show More" onPress={handleShowMore} />
             )}
           </VStack>
           <VStack mh={24}>
@@ -153,13 +166,12 @@ const TransactionHistory = React.memo(() => {
                 style={{ alignSelf: "center" }}
                 color={"#00FFFF"}
               />
-            ) : bxg_history?.filter((item: any) => item.type.includes("Sell"))
-                .length > 0 ? (
-              bxg_history
-                ?.filter((item: any) => item.type.includes("Sell"))
+            ) : filterForTypeSell?.length > 0 ? (
+              filterForTypeSell?.slice(0, displayCount)
                 .map(
                   //@ts-ignore
                   (item, i) => {
+
                     return (
                       <ListItem
                         id={i}
@@ -182,6 +194,10 @@ const TransactionHistory = React.memo(() => {
                 No Sell History Found.
               </Text>
             )}
+
+            {!floader && displayCount < filterForTypeSell?.length && (
+              <Button title="Show More" onPress={handleShowMore} />
+            )}
           </VStack>
           <VStack mh={24}>
             {floader ? (
@@ -190,45 +206,51 @@ const TransactionHistory = React.memo(() => {
                 style={{ alignSelf: "center" }}
                 color={"#00FFFF"}
               />
-            ) : stake_page?.stakedData?.length > 0 ? (
-              stake_page?.stakedData?.map(
-                //@ts-ignore
-                (item, i) => {
-                  return (
-                    <VStack
-                      key={i}
-                      border={12}
-                      level="2"
-                      margin={0}
-                      padding={16}
-                      mb={12}
-                    >
-                      <HStack itemsCenter mb={8}>
-                        <Text category="c1">Staked BXG</Text>
-                        <Text category="c1" status="info">
-                          {item.bxg}
-                        </Text>
-                      </HStack>
-                      <HStack itemsCenter mb={8}>
-                        <Text category="c1">Staked Time</Text>
-                        <Text category="c1" status="warning">
-                          {timer(item.stake_time)}
-                        </Text>
-                      </HStack>
-                      <HStack itemsCenter mb={8}>
-                        <Text category="c1">Staked Date </Text>
-                        <Text category="c1" status="success">
-                          {new Date(item.stake_time).toLocaleString()}
-                        </Text>
-                      </HStack>
-                    </VStack>
-                  );
-                }
-              )
-            ) : (
-              <Text style={{ alignSelf: "center" }} status="primary">
-                No stake History Found.
-              </Text>
+            ) :
+
+              stake_page?.stakedData?.length > 0 ? (
+                stake_page?.stakedData?.slice(0, displayCount)?.map(
+                  //@ts-ignore
+                  (item, i) => {
+                    return (
+                      <VStack
+                        key={i}
+                        border={12}
+                        level="2"
+                        margin={0}
+                        padding={16}
+                        mb={12}
+                      >
+                        <HStack itemsCenter mb={8}>
+                          <Text category="c1">Staked BXG</Text>
+                          <Text category="c1" status="info">
+                            {item.bxg}
+                          </Text>
+                        </HStack>
+                        <HStack itemsCenter mb={8}>
+                          <Text category="c1">Staked Time</Text>
+                          <Text category="c1" status="warning">
+                            {timer(item.stake_time)}
+                          </Text>
+                        </HStack>
+                        <HStack itemsCenter mb={8}>
+                          <Text category="c1">Staked Date </Text>
+                          <Text category="c1" status="success">
+                            {new Date(item.stake_time).toLocaleString()}
+                          </Text>
+                        </HStack>
+                      </VStack>
+                    );
+                  }
+                )
+              ) : (
+                <Text style={{ alignSelf: "center" }} status="primary">
+                  No stake History Found.
+                </Text>
+              )}
+
+            {!floader && displayCount < stake_page?.stakedData?.length && (
+              <Button title="Show More" onPress={handleShowMore} />
             )}
           </VStack>
           <VStack mh={24}>
@@ -239,7 +261,8 @@ const TransactionHistory = React.memo(() => {
                 color={"#00FFFF"}
               />
             ) : withdraw_history?.length > 0 ? (
-              withdraw_history?.map(
+
+              withdraw_history?.slice(0, displayCount)?.map(
                 //@ts-ignore
                 (item, i) => {
                   return (
@@ -284,10 +307,14 @@ const TransactionHistory = React.memo(() => {
                 No Withdraw History Found.
               </Text>
             )}
+
+            {!floader && displayCount < withdraw_history?.length && (
+              <Button title="Show More" onPress={handleShowMore} />
+            )}
           </VStack>
         </ViewPager>
       </Content>
-    </Container>
+    </Container >
   );
 });
 
