@@ -86,7 +86,7 @@ const Buy = () => {
                     //@ts-ignore
                     bxg={item.bxg}
                     //@ts-ignore
-                    usdt={item.bxg}
+                    usdt={item.usdt}
                     //@ts-ignore
                     type={item.type}
                     //@ts-ignore

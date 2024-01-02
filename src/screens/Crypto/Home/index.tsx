@@ -247,7 +247,7 @@ const Crypto03 = React.memo(() => {
           </Text>
           <Text
             style={{ fontFamily: "AlbertSans-Bold" }}
-            onPress={() => navigate("History")}
+            onPress={() => navigate("Profile")}
           >
             <Ionicons name="arrow-forward" size={20} color="#3366FF" />
           </Text>
@@ -267,7 +267,7 @@ const Crypto03 = React.memo(() => {
                   <ListItem
                     id={i}
                     bxg={item.bxg}
-                    usdt={item.bxg}
+                    usdt={item.usdt}
                     type={item.type}
                     status={item.status}
                     time={item.createdAt}
